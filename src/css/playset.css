@@ -1,0 +1,357 @@
+/* ============== CONTENT FORMATTING ============== */
+
+legend {
+    font-weight: 700;
+    padding-bottom: 0.5rem;
+}
+
+fieldset:has(legend) > :not(legend) {
+    margin-left: 0.5rem;
+}
+
+li {
+    margin-left: 1.25rem;
+}
+
+#settings {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+
+    min-width: 15rem;
+    max-width: 40rem;
+    width: 40%;
+}
+
+@media ( max-width: 1270px ) or ( max-device-width: 1270px) {
+    #settings {
+        width: 60%;
+    }
+} 
+
+@media ( max-width: 570px ) or ( max-device-width: 570px) {
+    #settings {
+        width: 70%;
+    }
+} 
+
+@media ( max-width: 480px ) or ( max-device-width: 480px) {
+    #settings {
+        width: 80%;
+    }
+}
+
+.settings-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 1.5rem 2.5rem;
+    gap: 0.75rem;
+}
+
+.settings-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 2rem;
+
+    padding: 1.5rem 2rem;
+    margin: 0 2.5rem;
+}
+
+.settings-confirmation {
+    display: flex;
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 1.25rem;
+}
+
+#card-display {
+    position: relative;
+    display: grid;
+    grid-template-rows: calc(2rem + 1rem) auto calc(2rem + 5.75rem);
+    align-items: center;
+
+    padding: 0 15%;
+    height: calc(100vh - 5.75rem - 1rem);
+}
+
+.card-display-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.5rem
+}
+
+.card-display-options {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 0.25rem;
+}
+
+#card-view-toggle + label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    height: 100%;
+}
+
+.card-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    height: 100%;
+    width: 100%;
+}
+
+.card-side p {    
+    text-align: center;
+    width: 0;
+}
+
+
+.card.view-both .card-side p {
+    min-width: calc(100% - 2rem);
+    max-height: calc(100% - 2rem);
+    padding: 1rem;
+}
+
+.card:not(.view-both) .card-side p { 
+    min-width: calc(100% - 5rem);
+    max-height: calc(100% - 5rem);
+    padding: 2.5rem;
+}
+
+
+
+.reveal-button {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+}
+
+.front .reveal-button {
+    left: 0;
+}
+
+.back .reveal-button {
+    right: 0;
+}
+
+
+
+
+
+
+
+
+
+.flip-button {
+    position: absolute;
+    padding: 1.25rem;
+    top: 0;
+    left: 0;
+}
+
+.card-count {
+    align-self: start;
+    position: relative;
+    justify-self: center;
+    margin: 2rem;
+}
+
+.card-arrows {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+input[name=card-back] {
+    left: 6%;
+}
+
+input[name=card-forward] {
+    right: 6%;
+} 
+
+/* ======================= OVERFLOW ======================= */
+
+.title {
+    word-wrap: break-word;
+}
+
+.card {
+    overflow: hidden;
+}
+
+.card-side {
+    overflow-x: hidden;
+}
+
+.card-side p {
+    overflow-y: auto;
+    word-wrap: break-word;
+}
+
+/* ====================== STYLING ====================== */
+
+#settings {
+    background-color: var(--hex-element);
+    border: 2px solid rgb(var(--rgb-accent-2));
+    border-radius: 1rem;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.settings-options {
+    background-color: var(--hex-element-dark);
+    border: 1px solid var(--hex-border-dim);
+    border-radius: 1rem;
+}
+
+.play-button {
+    background-color: var(--hex-element);
+    font-size: 1rem;
+    font-weight: 600;
+
+    border: 4px solid rgb(var(--rgb-accent-1));
+    border-radius: 2rem;
+
+    height: 2.5rem;
+    padding: 0 1rem;
+}
+
+.view-button {
+    background-color: var(--hex-element-borderless);
+    font-size: 1.5rem;
+    font-weight: 600;
+
+    border: 2px solid transparent;
+    border-radius: 2rem;
+
+    height: 2.5rem;
+    width: 2.5rem;
+
+    transform: rotate(180deg);
+}
+
+#card-view-toggle {
+    display: none;
+}
+
+#card-view-toggle + label, .reset-display-button, .stop-button {
+    font-size: 1.25rem;
+    border-radius: 0.25rem;
+    aspect-ratio: 1 / 1;
+    height: 1.75rem;
+}
+
+.reset-display-button, .stop-button {
+    line-height: 100%;
+}
+
+.stop-button {
+    color: var(--hex-delete);
+}
+
+.card {
+    background-color: var(--hex-element);
+    border: 1px solid var(--hex-border-normal);
+    border-radius: 1rem;
+}
+
+.card.view-both .back, .back .reveal-button {
+    border-left: 1px solid var(--hex-border-normal);
+}
+
+.reveal-button {
+    background-color: var(--hex-border-dim);
+    font-size: 1.25rem;
+}
+
+.card-arrows {
+    height: 2.5rem;
+    width: 2.5rem;
+    text-align: center;
+
+    background-color: var(--hex-element-borderless);
+    font-size: 1rem;
+    line-height: 100%;
+
+    border: 2px solid transparent;
+    border-radius: 2rem;
+}
+
+/* ======================= INTERACTIONS ======================= */
+
+.view-button:hover {
+    background-color: var(--hex-border-dim);
+}
+
+.view-button:active {
+    background-color: var(--hex-element-borderless);
+}
+
+.play-button:hover {
+    background-color: rgba(var(--rgb-accent-1), 0.25);
+}
+
+.play-button:active {
+    background-color: rgba(var(--rgb-accent-1), 0.125);
+}
+
+#card-view-toggle + label:hover, .reset-display-button:hover, .stop-button:hover {
+    background-color: var(--hex-border-dim);
+}
+
+#card-view-toggle + label:active, .reset-display-button:active, .stop-button:active {
+    background-color: var(--hex-element-borderless);
+}
+
+.stop-button:hover {
+    color: var(--hex-delete);
+}
+
+.reveal-button:hover {
+    background-color: var(--hex-element-borderless);
+    color: rgb(var(--rgb-accent-1));
+}
+
+#settings-dialog:not([open]) + #card-display .card {
+    border: 2px solid rgb(var(--rgb-accent-1));
+}
+
+.card-arrows:hover {
+    background-color: var(--hex-border-dim);
+}
+
+.card-arrows:active {
+    background-color: var(--hex-element-borderless);
+}
+
+/* ======================= FUNCTIONALITIES ======================= */
+
+.card-side:not(.hidden-side) .reveal-button {
+    display: none;
+}
+
+.card:not(.view-both) .hidden-side {
+    display: none;
+}
