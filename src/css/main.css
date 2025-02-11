@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
+:root {
+    --hex-background: #171717;
+    --hex-background-dark: #101010;
+
+    --hex-element: #1D1D1D;
+    --hex-element-dark: #1A1A1A;
+
+    --hex-element-borderless: #2A2A2A;
+    --hex-element-borderless-dark: #242424;
+
+    --hex-text: #F0F0F0;
+    --hex-text-sub: #a6a6a6;
+    
+    --hex-border-dim: #3B3B3B;
+    --hex-border-normal: #575757;
+    --hex-border-bright: #a2a2a2;
+
+    --hex-play: #78d57e;
+    --hex-edit: #6bc3fa;
+    --hex-delete: #ff6375;
+
+    --rgb-accent-1: 125, 188, 250;
+    --rgb-accent-2: 224, 191, 69;
+
+    accent-color: rgb(var(--rgb-accent-1));
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    color: var(--hex-text);
+    border: none;
+    outline: none;
+}
+
+/* ============== DEFAULT STYLING ============== */
+
+html {
+    background-color: var(--hex-background);
+    color: var(--hex-text);
+    font-family: Lexend, Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.025em;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+@media ( max-device-width: 480px ) {
+    html {
+        font-size: 32px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+a {
+    color: var(--hex-text);
+    text-decoration: none;
+}
+
+small {
+    color: var(--hex-text-sub);
+    font-size: 0.75rem;
+    font-weight: 300;
+}
+
+ul {
+    list-style-type: none;
+}
+
+input:is([type=button], [type=submit], [type=checkbox], [type=radio]):enabled,
+input:is([type=button], [type=submit], [type=checkbox], [type=radio]):enabled + label,
+label:has(+ input:is([type=button], [type=submit], [type=checkbox], [type=radio]):enabled) {
+    cursor: pointer;
+}
+
+input:is([type=button], [type=submit], [type=checkbox], [type=radio]):disabled + label {
+    color: var(--hex-text-sub);
+}
+
+dialog::backdrop {
+    background-color: #00000040;
+}
+
+/* =================== HEADER =================== */
+
+header {
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    height: 5.75rem;
+    background-color: var(--hex-element);
+    outline: 1px solid var(--hex-border-normal);
+}
+
+/* ================= SCROLL BAR ================= */
+
+::-webkit-scrollbar {
+    background: var(--hex-element);
+    width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--hex-element-borderless);
+    border: 2px solid var(--hex-element);
+    border-radius: 1rem;
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--hex-background);
+}

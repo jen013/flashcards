@@ -1,0 +1,328 @@
+/* ============== CONTENT FORMATTING ============== */
+
+#delete-popup-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 25%;
+    min-width: 12rem;
+    padding: 1.5rem 2rem;
+}
+
+#delete-popup-form p {
+    margin: auto;
+    margin-bottom: 1.75rem;
+}
+
+.delete-popup-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.delete-popup-buttons > input {
+    padding: 0.25rem 0.75rem;
+    width: 75%;
+    min-width: fit-content;
+}
+
+.delete-cancel {
+    justify-self: end;
+}
+
+.delete-confirm {
+    justify-self: start;
+}
+
+#card-set-form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    margin: 1.25rem 15%;
+}
+
+@media ( max-device-width: 480px ) {
+    #card-set-form {
+        margin: 1.25rem 7.5%;
+    }
+}
+
+.title {
+    padding: 0.5rem;
+}
+
+.play-button, .edit-button, .delete-button {
+    height: 2.5rem;
+    width: 2.5rem;
+    margin: 0 0.25rem;
+}
+
+.card-set-confirmation {
+    text-align: end;
+}
+
+.card-set-confirmation > input {
+    padding: 0.25rem 0.75rem;
+    margin: 0 0.25rem;
+}
+
+.card-set {
+    display: flex;
+    flex-direction: column;
+}
+
+input[name=add-card-button] {
+    align-self: center;
+    height: 2rem;
+    width: 3rem;
+}
+
+.card {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 2.5rem;
+
+    width: calc(100% + 2.5rem);
+    margin: 0.5rem 0;
+}
+
+.card-data {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.card-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10rem;
+}
+
+p[name=text] {
+    width: 0;
+    min-width: calc(100% - 2rem);
+    max-height: calc(100% - 2rem);
+    padding: 1rem;
+}
+
+/* ======================= OVERFLOW ======================= */
+
+.title {
+    text-overflow: ellipsis;
+}
+
+.card-side {
+    overflow-x: hidden;
+}
+
+p[name=text] {
+    overflow-y: auto;
+    word-wrap: break-word;
+}
+
+/* ====================== STYLING ====================== */
+
+#delete-popup-form {
+    background-color: var(--hex-background);
+    text-align: center;
+
+    border: 2px solid var(--hex-delete);
+    border-radius: 1rem;
+}
+
+.delete-cancel, .delete-confirm {
+    background-color: var(--hex-element-borderless);
+    font-size: 0.9rem;
+    font-weight: 800;
+
+    border: 4px solid transparent;
+    border-radius: 2rem;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    border-radius: 1em;
+}
+
+.card-set-interactions {
+    text-align: center;
+}
+
+.play-button, .edit-button, .delete-button {
+    background-color: var(--hex-element-borderless);
+    font-size: 1rem;
+    line-height: 100%;
+
+    border: 2px solid transparent;
+    border-radius: 2rem;
+}
+
+.cancel-button, .save-button {
+    font-size: 0.9rem;
+    font-weight: 800;
+
+    border: 4px solid transparent;
+    border-radius: 2rem;
+}
+
+.cancel-button {
+    background-color: var(--hex-element-borderless);
+}
+
+.save-button {
+    background-color: var(--hex-element);
+    border-color: rgb(var(--rgb-accent-1));
+}
+
+input[name=add-card-button] {
+    background-color: var(--hex-element);
+    font-size: 1.5rem;
+    line-height: 100%;
+
+    border: 4px solid rgb(var(--rgb-accent-2));
+    border-radius: 1em;
+}
+
+.card {
+    border-radius: 1rem;
+}
+
+.card-data {
+    border: 1px solid var(--hex-border-normal);
+    background-color: var(--hex-element);
+    border-radius: inherit;
+}
+
+.card-side {
+    background-color: var(--hex-element);
+}
+
+fieldset[name=front] {
+    border-right: 1px solid var(--hex-border-normal);
+    border-top-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+}
+
+fieldset[name=back] {
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+}
+
+p[name=text] {
+    text-align: center;
+}
+
+input[name=delete-card-button] {
+    font-size: 1.75rem;
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+}
+
+/* ======================= INTERACTIONS ======================= */
+
+.delete-cancel:hover, .delete-confirm:hover {
+    color: var(--hex-background-dark);
+}
+
+.delete-cancel:hover {
+    background-color: rgb(var(--rgb-accent-1));
+}
+
+.delete-confirm:hover {
+    background-color: var(--hex-delete);
+}
+
+.title:focus {
+    outline: 1px solid var(--hex-border-bright);
+}
+
+.title[readonly]:focus {
+    outline: none;
+}
+
+input[type=button]:disabled, input[type=submit]:disabled {
+    background-color: var(--hex-background);
+    color: var(--hex-border-normal);
+    border-color: var(--hex-border-normal);
+}
+
+.play-button:hover, .edit-button:hover, .delete-button:hover {
+    background-color: var(--hex-element);
+}
+
+.play-button:active, .edit-button:active, .delete-button:active {
+    background-color: var(--hex-background-dark);
+}
+
+.play-button:hover {
+    color: var(--hex-play);
+    border-color: var(--hex-play);
+}
+
+.edit-button:hover {
+    color: var(--hex-edit);
+    border-color: var(--hex-edit);
+}
+
+.delete-button:hover {
+    color: var(--hex-delete);
+    border-color: var(--hex-delete);
+}
+
+.cancel-button:hover {
+    background-color: var(--hex-element-borderless-dark);
+}
+
+.cancel-button:active {
+    background-color: var(--hex-element);
+}
+
+.save-button:hover {
+    background-color: rgba(var(--rgb-accent-1), 0.25);
+}
+
+.save-button:active {
+    background-color: rgba(var(--rgb-accent-1), 0.125);
+}
+
+input[name=add-card-button]:hover {
+    background-color: rgba(var(--rgb-accent-2), 0.25);
+}
+
+input[name=add-card-button]:active {
+    background-color: rgba(var(--rgb-accent-2), 0.125);
+}
+
+.card-data:focus-within {
+    border-color: rgb(var(--rgb-accent-1));
+}
+
+.card-side:focus-within {
+    background-color: var(--hex-background-dark);
+}
+
+.card:hover:has(> input[name=delete-card-button]:not([hidden])) {
+    background-color: var(--hex-border-normal);
+}
+
+.card-data:has(+ input[name=delete-card-button]:hover) {
+    border-color: var(--hex-delete);
+}
+
+.card-data:has(+ input[name=delete-card-button]:active) .card-side {
+    background-color: var(--hex-element-dark);
+}
+
+/* ======================= FUNCTIONALITIES ======================= */
+
+input[name=delete-card-button] {
+    display: none;
+}
+
+.card:hover > input[name=delete-card-button]:not([hidden]) {
+    display: block;
+}

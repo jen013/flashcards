@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width, initial-scale=1">
+    <link href="./src/css/main.css" rel="stylesheet">
+    <link href="./src/css/viewset.css" rel="stylesheet">
+    <script src="./src/js/viewset.js" type="module"></script>
+
+    <title>View Flashcard Set</title>
+</head>
+
+<body>
+    <header>
+        <h1><a href="./">Flashcards</a></h1>
+    </header>
+
+    <main>
+        <dialog id="delete-popup-dialog">
+            <form id="delete-popup-form">
+                <p>Are you sure you want to DELETE this flashcard set?</p>
+                <div class="delete-popup-buttons">
+                    <input type="button" class="delete-cancel" value="Cancel">
+                    <input type="submit" class="delete-confirm" value="Delete">
+                </div>
+            </form>
+        </dialog>
+        
+        <form id="card-set-form">
+            <input type="text" name="title" class="title" readonly>
+            
+            <div class="card-set-interactions">
+                <input type="button" class="edit-button" value="✎" title="Edit">
+                <input type="button" class="play-button" value="▶" title="Play">
+                <input type="button" class="delete-button" value="🗑" title="Delete">
+            </div>
+            
+            <fieldset class="card-set">
+                <input type="button" name="add-card-button" value="+" title="Insert Card" hidden>
+            </fieldset>
+            
+            <div class="card-set-confirmation">
+                <input type="button" class="cancel-button" value="Cancel" hidden>
+                <input type="submit" class="save-button" value="Save" hidden>
+            </div>
+        </form>
+    </main>
+    
+    <template id="card-template">
+        <fieldset name="card" class="card">
+            <div class="card-data">
+                <fieldset name="front" class="card-side">
+                    <p type="text" name="text" contenteditable="true"></p>
+                    <input type="file" name="image" accept="image/*,.pdf" hidden>
+                    <input type="file" name="audio" accept="audio/*" hidden>
+                </fieldset>
+                
+                <fieldset name="back" class="card-side">
+                    <p type="text" name="text" contenteditable="true"></p>
+                    <input type="file" name="image" accept="image/*,.pdf" hidden>
+                    <input type="file" name="audio" accept="audio/*" hidden>
+                </fieldset>
+            </div>
+            
+            <input type="button" name="delete-card-button" value="-" title="Delete Card">
+        </fieldset>
+    </template>
+</body>
+
+</html>
