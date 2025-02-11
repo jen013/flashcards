@@ -2,6 +2,8 @@
 
 Flashcards is a simple website meant to help users study through self-quizzing. Users can create, edit, delete, and study/play their own flashcard sets right away. Each flashcard has two sides that can hold information, (e.g., a question and an answer). Playing a flashcard set lets users practice and test their memorization of the information.
 
+***View Site:** <https://jen013.github.io/flashcards/>*
+
 ## Features
 
 - Creation, modification, and deletion of flashcard sets, which each contain a title and doubled-sided cards that can hold text.
