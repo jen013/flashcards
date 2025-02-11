@@ -4,16 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewpoint" content="width=device-width, initial-scale=1">
+    <link href="./src/css/main.css" rel="stylesheet">
+    <link href="./src/css/index.css" rel="stylesheet">
+    <script src="./src/js/index.js" type="module"></script>
 
     <title>Flashcards</title>
-
 </head>
 
 <body>
+    <header>
+        <h1><a href="./" title="Home">Flashcards</a></h1>
+        <input type="button" id="new-set-button" value="+" title="Create Flashcard Set" onclick="window.location.href = './newset.html'">
+    </header>
     
-    <h1>Flashcards</h1>
+    <main>
+        <p class="intro-message" hidden>Get Started by Clicking the "+" Button in the Bottom Left Corner.</p>
 
+        <ul id="flashcard-sets"></ul>
+    </main>
+
+    <template id="card-set-template">
+        <li class="card-set">
+            <a class="title" title="View Set"></a>
+            <p class="cards-length"></p>
+            <small class="cards-summary"></small>
+            <input type="button" class="play-button" value="▶" title="Play">
+            <input type="button" class="edit-button" value="✎" title="Edit">
+        </li>
+    </template>
+    
+    <template id="card-template">
+        <li class="card">
+            <section class="front">
+                <p></p>
+                <img hidden>
+                <audio hidden><source></audio>
+            </section>
+            <section class="back">
+                <p></p>
+                <img hidden>
+                <audio hidden><source></audio>
+            </section>
+        </li>
+    </template>
 </body>
-
 
 </html>

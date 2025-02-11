@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width, initial-scale=1">
+    <link href="./src/css/main.css" rel="stylesheet">
+    <link href="./src/css/playset.css" rel="stylesheet">
+    <script src="./src/js/playset.js" type="module"></script>
+
+    <title>Play Flashcard Set</title>
+</head>
+
+<body>
+    <header>
+        <h1><a href="./" title="Home">Flashcards</a></h1>
+    </header>
+    
+    <main>
+        <dialog id="settings-dialog">
+            <form id="settings">
+                <div class="settings-header">
+                    <input type="button" class="view-button" value="↪" title="View Set" onclick="window.location.href = './viewset.html' + window.location.search">
+                    <h2 class="title"></h2>
+                </div>
+
+                <div class="settings-options">
+                    <fieldset id="card-sequence">
+                        <legend>Card Sequence</legend>
+
+                        <div>
+                            <input type="checkbox" id="shuffle" name="card-shuffle" value="shuffle">
+                            <label for="shuffle">Shuffle</label>
+                        </div>
+                
+                        <div>
+                            <input type="checkbox" id="infinite-mode" name="infinite-mode" value="infinite-mode">
+                            <label for="infinite-mode">Infinite Mode</label>
+                            <ul>
+                                <li>
+                                    <input type="checkbox" id="true-random" name="card-shuffle" value="true-random" disabled>
+                                    <label for="true-random">True Random</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </fieldset>
+        
+                    <fieldset id="display-first">
+                        <legend>Side Displayed First</legend>
+        
+                        <div>
+                            <input type="radio" id="front-question" name="display-first" value="front" checked>
+                            <label for="front-question">Front</label>
+                        </div>
+                        
+                        <div>
+                            <input type="radio" id="back-question" name="display-first" value="back">
+                            <label for="back-question">Back</label>
+                        </div>
+        
+                        <div>
+                            <input type="radio" id="random-question" name="display-first" value="random">
+                            <label for="random-question">Random</label>
+                        </div>
+                    </fieldset>
+                </div>
+
+        
+                <div class="settings-confirmation">
+                    <input type="submit" class="play-button" value="▶  PLAY" title="Play">
+                </div>
+            </form>
+        </dialog>
+        
+        
+        <form id="card-display">
+            <div class="card-display-menu">
+                <div class="card-display-options">
+                    <input type="checkbox" id="card-view-toggle" name="card-view-toggle" value="view-one-side">
+                    <label for="card-view-toggle" title="Toggle Card View">◫</label>
+                    
+                    <input type="button" name="reset-card-display" class="reset-display-button" value="↻" title="Reset Card">
+                </div>
+                
+                <input type="submit" class="stop-button" value="⏹" title="Stop">
+            </div>
+            
+            <fieldset name="card" class="card view-both">
+                <fieldset name="front" class="card-side front">
+                     <input type="button" name="reveal-card" class="reveal-button" value="👁" title="Reveal Card">
+                    <p></p>
+                    <img hidden>
+                    <audio hidden><source></audio>
+                </fieldset>
+                
+                <fieldset name="back" class="card-side back">
+                     <input type="button" name="reveal-card" class="reveal-button" value="👁" title="Reveal Card">
+                    <p></p>
+                    <img hidden>
+                    <audio hidden><source></audio>
+                </fieldset><source></audio>
+                
+                <input type="button" name="flip-card" class="flip-button" value="↪" title="Flip">
+            </fieldset>
+            
+            <p class="card-count">?/?</p>
+
+            <input type="button" name="card-back" class="card-arrows" value="◀">
+            <input type="button" name="card-forward" class="card-arrows" value="▶">
+            
+        </form>
+    </main>
+</body>
+
+</html>
