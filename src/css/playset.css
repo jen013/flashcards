@@ -59,7 +59,7 @@ li {
     grid-template-rows: calc(2rem + 1rem) auto calc(2rem + var(--header-height));
     align-items: center;
 
-    padding: 0 15%;
+    margin: 0 15%;
     height: calc(100vh - var(--header-height));
 }
 
@@ -116,8 +116,6 @@ li {
     padding: 2.5rem;
 }
 
-
-
 .reveal-button {
     position: absolute;
     top: 0;
@@ -132,14 +130,6 @@ li {
 .back .reveal-button {
     right: 0;
 }
-
-
-
-
-
-
-
-
 
 .flip-button {
     position: absolute;
