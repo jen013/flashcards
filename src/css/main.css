@@ -50,16 +50,6 @@ h1 {
     font-size: 2rem;
 }
 
-@media ( max-device-width: 480px ) {
-    html {
-        font-size: 32px;
-    }
-
-    h1 {
-        font-size: 2rem;
-    }
-}
-
 a {
     color: var(--hex-text);
     text-decoration: none;

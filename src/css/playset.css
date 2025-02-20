@@ -24,25 +24,7 @@ li {
 
     min-width: 15rem;
     max-width: 40rem;
-    width: 40%;
-}
-
-@media ( max-width: 1270px ) or ( max-device-width: 1270px) {
-    #settings {
-        width: 60%;
-    }
-} 
-
-@media ( max-width: 570px ) or ( max-device-width: 570px) {
-    #settings {
-        width: 70%;
-    }
-} 
-
-@media ( max-width: 480px ) or ( max-device-width: 480px) {
-    #settings {
-        width: 80%;
-    }
+    width: 80%;
 }
 
 .settings-header {
@@ -180,11 +162,13 @@ li {
 }
 
 input[name=card-back] {
-    left: 6%;
+    left: 7.5%;
+    transform: translateX(-50%);
 }
 
 input[name=card-forward] {
-    right: 6%;
+    right: 7.5%;
+    transform: translateX(50%);
 } 
 
 /* ======================= OVERFLOW ======================= */

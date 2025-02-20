@@ -43,7 +43,7 @@
     margin: 1.25rem 15%;
 }
 
-@media ( max-device-width: 480px ) {
+@media ( max-width: 480px ) {
     #card-set-form {
         margin: 1.25rem 7.5%;
     }
