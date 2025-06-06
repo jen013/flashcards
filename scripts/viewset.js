@@ -82,6 +82,9 @@ function setEditable() {
 
         } else if (element.name == "front" || element.name == "back") {
             element.children["text"].contentEditable = "true";
+
+        } else if (element.className =="settings") {
+            element.removeAttribute("hidden");
         }
     }
 }
@@ -113,6 +116,9 @@ function setReadOnly() {
 
         } else if (element.name == "front" || element.name == "back") {
             element.children["text"].contentEditable = "false";
+
+        } else if (element.className =="settings") {
+            element.hidden = true;
         }
     }
 }

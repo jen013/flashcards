@@ -1,6 +1,8 @@
 import { flashcardSets, cloneCardTemplate } from "./main.js";
 import { CardSet } from "./cardset.js";
 
+const speechSynth = window.speechSynthesis;
+
 addFunctionality();
 
 /**
@@ -21,6 +23,9 @@ function addFunctionality() {
         storeSet(newCardSet, cardSetIdx);
         window.location.href = "./viewset.html?index=" + cardSetIdx;
     });
+
+    fillVoiceSelect();
+    speechSynth.onvoiceschanged = fillVoiceSelect;
 }
 
 /**
@@ -80,6 +85,25 @@ function formToCardSet() {
 function storeSet(cardSet, index) {
     flashcardSets[index] = cardSet;
     localStorage.setItem("flashcardSets", JSON.stringify(flashcardSets));
+}
+
+/**
+ * Populate voice select with device's available voice options.
+ */
+function fillVoiceSelect() {
+    const voiceSelect = document.getElementById("voice-select");
+    const voices = speechSynth.getVoices();
+    let voiceOption;
+
+    for (const voice of voices) {
+        voiceOption = document.createElement("option");
+        voiceOption.textContent += `[${voice.lang}] ${voice.name}`;
+        if (voice.default) {
+            voiceOption.textContent += " [Default]";
+        }
+        voiceOption.value = voice.lang;
+        voiceSelect.appendChild(voiceOption);
+    }
 }
 
 export { addCardInput };
