@@ -12,12 +12,13 @@ init();
  * Navigates to home page if no card set is found.
  */
 function init() {
-    if (cardSetIdx == null) {
-        window.location.href = "./";
-    }
+    
     // fillDocument has to come before setEditable/setReadOnly to properly set page title.
-    fillDocument();
-    if (searchParams.get("edit") === "true") {
+    if (cardSetIdx >= 0 && cardSetIdx < flashcardSets.length) {
+        fillDocument();
+    } else if (window.location.search != "?create=true") {
+        window.location.search = "?create=true";
+    }
         setEditable();
     } else {
         setReadOnly();
@@ -57,34 +58,15 @@ function fillDocument() {
 }
 
 /**
- * Makes form editable and hides and reveals appropriate elements;
+ * Makes form editable and hides and reveals appropriate elements.
+ * @param {boolean} create Whether the set is being created or edited, i.e., 
+ *      true if new set will be created, and false if an existing set will be edited.
  */
-function setEditable() {
+function setEditable(create=false) {
     const cardSetForm = document.getElementById("card-set-form");
-    const pageTitleElement = document.getElementsByTagName("title")[0];
-    pageTitleElement.textContent += " - Edit";
 
-    for (const element of cardSetForm.elements) {
-        if (element.className == "title") {
-            element.setAttribute("placeholder", "Enter Title Here")
-            element.removeAttribute("readonly");
-
-        } else if (element.className == "play-button") {
-            element.disabled = true;
-
-        } else if (element.className == "edit-button") {
-            element.disabled = true;
-
-        } else if (element.className == "delete-button") {
-            continue;
-
-        } else if (element.type == "button" || element.type == "submit") {
-            element.removeAttribute("hidden");
-
-        } else if (element.name == "front" || element.name == "back") {
-            element.children["text"].contentEditable = "true";
-        }
-    }
+    if (create) {
+        cardSetForm["card-set-interactions"].hidden = true;
 }
 
 /**
