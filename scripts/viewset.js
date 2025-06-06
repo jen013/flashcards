@@ -12,6 +12,7 @@ init();
  * Navigates to home page if no card set is found.
  */
 function init() {
+    const pageTitleElement = document.getElementsByTagName("title")[0];
     
     // fillDocument has to come before setEditable/setReadOnly to properly set page title.
     if (cardSetIdx >= 0 && cardSetIdx < flashcardSets.length) {
@@ -21,10 +22,13 @@ function init() {
     }
 
     if (searchParams.get("create") === "true") {
+        pageTitleElement.textContent = "Create Flashcard Set";
         setEditable(true);
     } else if (searchParams.get("edit") === "true") {
+        pageTitleElement.textContent += " - Edit";
         setEditable();
     } else {
+        pageTitleElement.textContent += " - View";
         setReadOnly();
     }
 
