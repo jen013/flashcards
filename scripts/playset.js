@@ -146,7 +146,7 @@ function updateCardCount(addend = 0) {
     totalCards = infiniteMode ? Infinity : cardsLength;
     totalCardsString = infiniteMode ? "?" : cardsLength;
 
-    cardCountElement.innerHTML = currentCard + "/" + totalCardsString;
+    cardCountElement.innerText = currentCard + "/" + totalCardsString;
     
     // Extend random order/side arrays when needed.
     if (currentCard >= randomOrderArray.length && cardShuffle && infiniteMode) {
