@@ -127,7 +127,7 @@ function addCardInput(clickedButton = document.getElementsByName("add-card-butto
 /**
  * Makes delete button functional. Clicking moves card set from flashcard sets to trash.
  */
-function addCardSetFunctionality() {
+    const cardSetForm = document.getElementById("card-set-form");
     const titleInput = document.getElementsByClassName("title")[0];
     const playButton = document.getElementsByClassName("play-button")[0];
     const cancelButton = document.getElementsByClassName("cancel-button")[0];
@@ -138,12 +138,20 @@ function addCardSetFunctionality() {
     titleInput.addEventListener("input", () => {
         titleInput.setAttribute("title", titleInput.value);
     });
+    
     playButton.addEventListener("click", () => {
         window.location.href = './playset.html' + window.location.search;
-    })
-    cancelButton.addEventListener("click", () => updateEditableURL(false));
+    });
     editButton.addEventListener("click", () => updateEditableURL(true));
     deleteButton.addEventListener("click", () => deletePopupDialog.showModal());
+
+    cancelButton.addEventListener("click", () => {
+        if (searchParams.get("create") === "true") {
+            window.location.href = './';
+        } else {
+            updateEditableURL(false);
+        }
+    });
     cardSetForm.addEventListener("submit", (event) => {
         event.preventDefault();
         storeSet(formToCardSet(), cardSetIdx);
