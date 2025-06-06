@@ -30,20 +30,20 @@
         <form id="card-set-form">
             <input type="text" name="title" class="title" readonly>
             
-            <div class="card-set-interactions">
-                <input type="button" class="edit-button" value="✎" title="Edit">
-                <input type="button" class="play-button" value="▶" title="Play">
-                <input type="button" class="delete-button" value="🗑" title="Delete">
-            </div>
+            <fieldset name="card-set-interactions" class="card-set-interactions">
+                <input type="button" name="edit-button" class="edit-button" value="✎" title="Edit">
+                <input type="button" name="play-button" class="play-button" value="▶" title="Play">
+                <input type="button" name="delete-button" class="delete-button" value="🗑" title="Delete">
+            </fieldset>
             
-            <fieldset class="card-set">
+            <fieldset name="card-set" class="card-set">
                 <input type="button" name="add-card-button" value="+" title="Insert Card" hidden>
             </fieldset>
             
-            <div class="card-set-confirmation">
-                <input type="button" class="cancel-button" value="Cancel" hidden>
-                <input type="submit" class="save-button" value="Save" hidden>
-            </div>
+            <fieldset name="card-set-confirmation" class="card-set-confirmation">
+                <input type="button" name="cancel-button" class="cancel-button" value="Cancel" hidden>
+                <input type="submit" name="save-button" class="save-button" value="Save" hidden>
+            </fieldset>
         </form>
     </main>
     

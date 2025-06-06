@@ -19,6 +19,10 @@ function init() {
     } else if (window.location.search != "?create=true") {
         window.location.search = "?create=true";
     }
+
+    if (searchParams.get("create") === "true") {
+        setEditable(true);
+    } else if (searchParams.get("edit") === "true") {
         setEditable();
     } else {
         setReadOnly();
@@ -64,16 +68,56 @@ function fillDocument() {
  */
 function setEditable(create=false) {
     const cardSetForm = document.getElementById("card-set-form");
+    const title = cardSetForm["title"];
+
+    title.removeAttribute("readonly");
+    title.setAttribute("placeholder", "Enter Title Here");
 
     if (create) {
         cardSetForm["card-set-interactions"].hidden = true;
+    } else {
+        cardSetForm["edit-button"].disabled = true;
+        cardSetForm["play-button"].disabled = true;
+    }
+
+    setAllFormElements(cardSetForm["add-card-button"], 
+        (button) => button.removeAttribute("hidden")
+    );
+
+    cardSetForm["cancel-button"].removeAttribute("hidden");
+    cardSetForm["save-button"].removeAttribute("hidden");
 }
 
 /**
- * Converts form to read only and hides and reveals appropriate elements;
+ * Makes interactive elements of document functional by adding event handlers and 
+ * dynamic inputs.
  */
 function setReadOnly() {
     const cardSetForm = document.getElementById("card-set-form");
+
+    setAllFormElements(cardSetForm["delete-card-button"], 
+        (button) => button.hidden = true
+    );
+    
+    const readCardContentOnly = (side) => side.children["text"].contentEditable = "false";
+    setAllFormElements(cardSetForm["front"], readCardContentOnly);
+    setAllFormElements(cardSetForm["back"], readCardContentOnly);
+}
+
+/**
+ * Call specific function on all given form elements.
+ * @param {HTMLElement|NodeList} element Results from accessing form element[s].
+ * @param {function} action Function to execute on the form element[s].
+ */
+function setAllFormElements(element, action) {
+    if (element && !(element instanceof NodeList)) {
+        element = [element]
+    }
+    if (element) {
+        element.forEach(action);
+    }
+}
+
 /**
  * Makes interactive elements of document functional by adding event handlers and 
  * dynamic inputs.
@@ -109,6 +153,7 @@ function addCardInput(clickedButton = document.getElementsByName("add-card-butto
 /**
  * Makes delete button functional. Clicking moves card set from flashcard sets to trash.
  */
+function addNavigationFunctionality() {
     const cardSetForm = document.getElementById("card-set-form");
     const titleInput = document.getElementsByClassName("title")[0];
     const playButton = document.getElementsByClassName("play-button")[0];
@@ -146,8 +191,14 @@ function addCardInput(clickedButton = document.getElementsByName("add-card-butto
  * @param {boolean} edit Editability to set document to.
  */
 function updateEditableURL(edit) {
-    edit ? searchParams.set("edit", true) : searchParams.delete("edit");
-    window.location.search = searchParams.toString();
+    const editSearchParams = new URLSearchParams();
+
+    editSearchParams.set("index", cardSetIdx);
+    if (edit) {
+        editSearchParams.set("edit", true);
+    }
+
+    window.location.search = editSearchParams;
 }
 
 /**
