@@ -1,10 +1,9 @@
-import { flashcardSets, cloneCardTemplate, trash, storeCardSet } from "./main.js";
+import { flashcardSets, availableVoices, cloneCardTemplate, trash, storeCardSet } from "./main.js";
 import { CardSet } from "./cardset.js";
 
 const searchParams = new URLSearchParams(window.location.search);
 const cardSetIdx = searchParams.get("index") ?? flashcardSets.length;
 const cardSetData = flashcardSets[cardSetIdx];
-const speechSynth = window.speechSynthesis;
 
 init();
 
@@ -32,9 +31,6 @@ function init() {
         pageTitleElement.textContent += " - View";
         setReadOnly();
     }
-
-    fillVoiceSelect();
-    speechSynth.onvoiceschanged = fillVoiceSelect;
 
     addEditFunctionality();
     addNavigationFunctionality();
@@ -66,25 +62,6 @@ function fillDocument() {
             cardInputs[i].elements[side].elements["image"].value = card[side]["image"];
             cardInputs[i].elements[side].elements["image"].value = card[side]["audio"];
         });
-    }
-}
-
-/**
- * Populate voice select with device's available voice options.
- */
-function fillVoiceSelect() {
-    const voiceSelect = document.getElementById("voice-select");
-    const voices = speechSynth.getVoices();
-    let voiceOption;
-
-    for (const voice of voices) {
-        voiceOption = document.createElement("option");
-        voiceOption.textContent += `[${voice.lang}] ${voice.name}`;
-        if (voice.default) {
-            voiceOption.textContent += " [Default]";
-        }
-        voiceOption.value = voice.lang;
-        voiceSelect.appendChild(voiceOption);
     }
 }
 

@@ -2,6 +2,12 @@ import { CardSet } from "./cardset.js";
 
 const flashcardSets = parseCardSetArray("flashcardSets");
 const trash = parseCardSetArray("trash");
+
+const speechSynth = window.speechSynthesis;
+storeVoices();
+speechSynth.onvoiceschanged = storeVoices;
+const availableVoices = parseVoices();
+
 /**
  * Updates flashcard sets of localStorage, i.e., replaces element at specified index 
  * with the card set passed. If index is null, then card set is inserted at the end.
@@ -21,6 +27,33 @@ function storeCardSet(cardSet, index) {
 function parseCardSetArray(key) {
     const flashcardSetsObj = JSON.parse(localStorage.getItem(key)) ?? [];
     return flashcardSetsObj.map((cardSet) => new CardSet(cardSet.title, cardSet.cards));
+}
+
+/**
+ * Maps the available voices from windows.SpeechSynthesis into an object and 
+ * stores them in localStorage.
+ */
+function storeVoices() {
+    const voices = speechSynth.getVoices();
+    const mappedVoices = voices.map((voice) => ({
+        label: `[${voice.lang}] ${voice.name}${voice.default ? " [Default]" : ""}`, 
+        lang: voice.lang,
+        default: voice.default
+    }));
+    
+    // Prevents reset by ensuring voices are stored when at least 1 is available.
+    if (mappedVoices.length > 0) {
+        localStorage.setItem("voices", JSON.stringify(mappedVoices));
+    }
+}
+
+/**
+ * Gets and parses voices from localStorage
+ * @returns {Array<Object>} Array of object representation of speech synthesis
+ *      voices under the key, "voices", in localStorage.
+ */
+function parseVoices() {
+    return JSON.parse(localStorage.getItem("voices")) ?? [];
 }
 
 /**
@@ -54,6 +87,7 @@ function cloneCardTemplate() {
 export { 
     flashcardSets, 
     trash,  
+    availableVoices, 
     cloneCardSetTemplate, 
     cloneCardTemplate, 
     storeCardSet 
