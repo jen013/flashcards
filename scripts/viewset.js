@@ -2,7 +2,7 @@ import { flashcardSets, cloneCardTemplate, trash } from "./main.js";
 import { CardSet } from "./cardset.js";
 
 const searchParams = new URLSearchParams(window.location.search);
-const cardSetIdx = parseInt(searchParams.get("index")) ?? flashcardSets.length;
+const cardSetIdx = searchParams.get("index") ?? flashcardSets.length;
 const cardSetData = flashcardSets[cardSetIdx];
 const speechSynth = window.speechSynthesis;
 
