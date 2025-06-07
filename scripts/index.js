@@ -10,6 +10,11 @@ function init() {
     if (!flashcardSets?.length) {
         introMessage.removeAttribute("hidden");
     }
+
+    const createButton = document.getElementById("new-set-button");
+    createButton.addEventListener("click", () => {
+        window.location.href = "./viewset.html?create=true"
+    })
     
     previewFlashcardSets();
 }

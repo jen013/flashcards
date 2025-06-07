@@ -1,10 +1,10 @@
-import { flashcardSets, trash } from "./main.js";
-// First new card button and submit button functionalities are also set at this import.
-import { addCardInput } from "./newset.js";
+import { flashcardSets, cloneCardTemplate, trash } from "./main.js";
+import { CardSet } from "./cardset.js";
 
 const searchParams = new URLSearchParams(window.location.search);
-const cardSetIdx = searchParams.get("index");
+const cardSetIdx = parseInt(searchParams.get("index")) ?? flashcardSets.length;
 const cardSetData = flashcardSets[cardSetIdx];
+const speechSynth = window.speechSynthesis;
 
 init();
 
@@ -13,17 +13,31 @@ init();
  * Navigates to home page if no card set is found.
  */
 function init() {
-    if (cardSetIdx == null) {
-        window.location.href = "./";
-    }
+    const pageTitleElement = document.getElementsByTagName("title")[0];
+    
     // fillDocument has to come before setEditable/setReadOnly to properly set page title.
-    fillDocument();
-    if (searchParams.get("edit") === "true") {
+    if (cardSetIdx >= 0 && cardSetIdx < flashcardSets.length) {
+        fillDocument();
+    } else if (window.location.search != "?create=true") {
+        window.location.search = "?create=true";
+    }
+
+    if (searchParams.get("create") === "true") {
+        pageTitleElement.textContent = "Create Flashcard Set";
+        setEditable(true);
+    } else if (searchParams.get("edit") === "true") {
+        pageTitleElement.textContent += " - Edit";
         setEditable();
     } else {
+        pageTitleElement.textContent += " - View";
         setReadOnly();
     }
-    addCardSetFunctionality();
+
+    fillVoiceSelect();
+    speechSynth.onvoiceschanged = fillVoiceSelect;
+
+    addEditFunctionality();
+    addNavigationFunctionality();
     addDeletePopupFunctionality();
 }
 
@@ -56,77 +70,118 @@ function fillDocument() {
 }
 
 /**
- * Makes form editable and hides and reveals appropriate elements;
+ * Populate voice select with device's available voice options.
  */
-function setEditable() {
-    const cardSetForm = document.getElementById("card-set-form");
-    const pageTitleElement = document.getElementsByTagName("title")[0];
-    pageTitleElement.textContent += " - Edit";
+function fillVoiceSelect() {
+    const voiceSelect = document.getElementById("voice-select");
+    const voices = speechSynth.getVoices();
+    let voiceOption;
 
-    for (const element of cardSetForm.elements) {
-        if (element.className == "title") {
-            element.setAttribute("placeholder", "Enter Title Here")
-            element.removeAttribute("readonly");
-
-        } else if (element.className == "play-button") {
-            element.disabled = true;
-
-        } else if (element.className == "edit-button") {
-            element.disabled = true;
-
-        } else if (element.className == "delete-button") {
-            continue;
-
-        } else if (element.type == "button" || element.type == "submit") {
-            element.removeAttribute("hidden");
-
-        } else if (element.name == "front" || element.name == "back") {
-            element.children["text"].contentEditable = "true";
-
-        } else if (element.className =="settings") {
-            element.removeAttribute("hidden");
+    for (const voice of voices) {
+        voiceOption = document.createElement("option");
+        voiceOption.textContent += `[${voice.lang}] ${voice.name}`;
+        if (voice.default) {
+            voiceOption.textContent += " [Default]";
         }
+        voiceOption.value = voice.lang;
+        voiceSelect.appendChild(voiceOption);
     }
 }
 
 /**
- * Converts form to read only and hides and reveals appropriate elements;
+ * Makes form editable and hides and reveals appropriate elements.
+ * @param {boolean} create Whether the set is being created or edited, i.e., 
+ *      true if new set will be created, and false if an existing set will be edited.
+ */
+function setEditable(create=false) {
+    const cardSetForm = document.getElementById("card-set-form");
+    const title = cardSetForm["title"];
+
+    title.removeAttribute("readonly");
+    title.setAttribute("placeholder", "Enter Title Here");
+
+    if (create) {
+        cardSetForm["card-set-interactions"].hidden = true;
+    } else {
+        cardSetForm["edit-button"].disabled = true;
+        cardSetForm["play-button"].disabled = true;
+    }
+
+    setAllFormElements(cardSetForm["add-card-button"], 
+        (button) => button.removeAttribute("hidden")
+    );
+
+    cardSetForm["cancel-button"].removeAttribute("hidden");
+    cardSetForm["save-button"].removeAttribute("hidden");
+}
+
+/**
+ * Makes interactive elements of document functional by adding event handlers and 
+ * dynamic inputs.
  */
 function setReadOnly() {
     const cardSetForm = document.getElementById("card-set-form");
-    const pageTitleElement = document.getElementsByTagName("title")[0];
-    pageTitleElement.textContent += " - View";
 
-    for (const element of cardSetForm.elements) {
-        if (element.className == "title") {
-            element.removeAttribute("placeholder");
-            element.readOnly = true;
+    setAllFormElements(cardSetForm["delete-card-button"], 
+        (button) => button.hidden = true
+    );
+    
+    const readCardContentOnly = (side) => side.children["text"].contentEditable = "false";
+    setAllFormElements(cardSetForm["front"], readCardContentOnly);
+    setAllFormElements(cardSetForm["back"], readCardContentOnly);
+}
 
-        } else if (element.className == "play-button") {
-            element.removeAttribute("disabled");
-
-        } else if (element.className == "edit-button") {
-            element.removeAttribute("disabled");
-
-        } else if (element.className == "delete-button") {
-            continue;
-
-        } else if (element.type == "button" || element.type == "submit") {
-            element.hidden = true;
-
-        } else if (element.name == "front" || element.name == "back") {
-            element.children["text"].contentEditable = "false";
-
-        } else if (element.className =="settings") {
-            element.hidden = true;
-        }
+/**
+ * Call specific function on all given form elements.
+ * @param {HTMLElement|NodeList} element Results from accessing form element[s].
+ * @param {function} action Function to execute on the form element[s].
+ */
+function setAllFormElements(element, action) {
+    if (element && !(element instanceof NodeList)) {
+        element = [element]
     }
+    if (element) {
+        element.forEach(action);
+    }
+}
+
+/**
+ * Makes interactive elements of document functional by adding event handlers and 
+ * dynamic inputs.
+ */
+function addEditFunctionality() {
+    const newCardButton = document.getElementsByName("add-card-button")[0];
+    newCardButton.addEventListener("click", () => addCardInput(newCardButton));
+}
+
+/**
+ * Updates page to have additional card fieldset at specified element.
+ * @param {Element} clickedButton The new card button that called the function.
+ */
+function addCardInput(clickedButton = document.getElementsByName("add-card-button")[0]) {
+    const cardSet = document.getElementsByClassName("card-set")[0];
+    const clonedButton = document.getElementsByName("add-card-button")[0].cloneNode(true);
+    let clonedCard = cloneCardTemplate();
+    const deleteButton = clonedCard.querySelector("[name='delete-card-button'");
+    
+    cardSet.insertBefore(clonedButton, clickedButton.nextElementSibling);
+    cardSet.insertBefore(clonedCard, clickedButton.nextElementSibling);
+
+    // Reassign clonedCard from empty document fragment to appropriate element in document.
+    clonedCard = clonedButton.previousElementSibling;
+    
+    clonedButton.addEventListener("click", () => addCardInput(clonedButton));
+    deleteButton.addEventListener("click", () => {
+        clonedButton.remove();
+        clonedCard.remove();
+    });
 }
 
 /**
  * Makes delete button functional. Clicking moves card set from flashcard sets to trash.
  */
-function addCardSetFunctionality() {
+function addNavigationFunctionality() {
+    const cardSetForm = document.getElementById("card-set-form");
     const titleInput = document.getElementsByClassName("title")[0];
     const playButton = document.getElementsByClassName("play-button")[0];
     const cancelButton = document.getElementsByClassName("cancel-button")[0];
@@ -137,12 +192,25 @@ function addCardSetFunctionality() {
     titleInput.addEventListener("input", () => {
         titleInput.setAttribute("title", titleInput.value);
     });
+    
     playButton.addEventListener("click", () => {
         window.location.href = './playset.html' + window.location.search;
-    })
-    cancelButton.addEventListener("click", () => updateEditableURL(false));
+    });
     editButton.addEventListener("click", () => updateEditableURL(true));
     deleteButton.addEventListener("click", () => deletePopupDialog.showModal());
+
+    cancelButton.addEventListener("click", () => {
+        if (searchParams.get("create") === "true") {
+            window.location.href = './';
+        } else {
+            updateEditableURL(false);
+        }
+    });
+    cardSetForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        storeSet(formToCardSet(), cardSetIdx);
+        window.location.search = "?index=" + cardSetIdx;
+    });
 }
 
 /**
@@ -150,8 +218,14 @@ function addCardSetFunctionality() {
  * @param {boolean} edit Editability to set document to.
  */
 function updateEditableURL(edit) {
-    edit ? searchParams.set("edit", true) : searchParams.delete("edit");
-    window.location.search = searchParams.toString();
+    const editSearchParams = new URLSearchParams();
+
+    editSearchParams.set("index", cardSetIdx);
+    if (edit) {
+        editSearchParams.set("edit", true);
+    }
+
+    window.location.search = editSearchParams;
 }
 
 /**
@@ -166,6 +240,42 @@ function addDeletePopupFunctionality() {
     deletePopupForm.addEventListener("mousedown", (event) => event.stopPropagation());
     deleteCancelButton.addEventListener("click", () => deletePopupDialog.close());
     deletePopupDialog.addEventListener("mousedown", () => deletePopupDialog.close());
+}
+
+/**
+ * Creates a CardSet object and populates it with data from the document.
+ * @returns {CardSet} A card set with form data.
+ */
+function formToCardSet() {
+    const cardInputs = document.getElementsByName("card");
+    const titleInput = document.getElementsByClassName("title")[0];
+    const cardsArray = Array(cardInputs.length);
+    let card;
+
+    for (let i = 0; i < cardsArray.length; i++) {
+        card = {front: {}, back: {}};
+
+        Object.keys(card).forEach((side) => {
+            card[side]["text"] = cardInputs[i].elements[side].children["text"].innerText;
+            card[side]["image"] = cardInputs[i].elements[side].elements["image"].value;
+            card[side]["audio"] = cardInputs[i].elements[side].elements["image"].value;
+        });
+
+        cardsArray[i] = card;
+    }
+
+    return new CardSet(titleInput.value, cardsArray);
+}
+
+/**
+ * Updates flashcard sets of localStorage, i.e., replaces element at specified index 
+ * with the card set passed. If index is null, then card set is inserted at the end.
+ * @param {CardSet} cardSet Card set to be stored in localStorage.
+ * @param {Number} index Index that the card set will be stored in.
+ */
+function storeSet(cardSet, index) {
+    flashcardSets[index] = cardSet;
+    localStorage.setItem("flashcardSets", JSON.stringify(flashcardSets));
 }
 
 /**
