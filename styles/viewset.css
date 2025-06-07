@@ -106,9 +106,12 @@ input[name=add-card-button] {
 }
 
 .card-side {
+    position: relative;
     display: flex;
+    
     justify-content: center;
     align-items: center;
+
     height: 10rem;
 }
 
@@ -117,6 +120,13 @@ p[name=text] {
     min-width: calc(100% - 2rem);
     max-height: calc(100% - 2rem);
     padding: 1rem;
+}
+
+.speak-text {
+    position: absolute;
+    padding: 0.75rem;
+    top: 0;
+    right: 0;
 }
 
 /* ======================= OVERFLOW ======================= */

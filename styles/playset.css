@@ -90,6 +90,7 @@ li {
 }
 
 .card-side {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -136,6 +137,13 @@ li {
     padding: 1.25rem;
     top: 0;
     left: 0;
+}
+
+.speak-text {
+    position: absolute;
+    padding: 1.25rem;
+    top: 0;
+    right: 0;
 }
 
 .card-count {
@@ -327,5 +335,9 @@ input[name=card-forward] {
 }
 
 .card:not(.view-both) .hidden-side {
+    display: none;
+}
+
+.hidden-side:has(.reveal-button:not([hidden])) .speak-text {
     display: none;
 }

@@ -4,6 +4,7 @@ const flashcardSets = parseCardSetArray("flashcardSets");
 const trash = parseCardSetArray("trash");
 
 const speechSynth = window.speechSynthesis;
+speechSynth.cancel();
 storeVoices();
 speechSynth.onvoiceschanged = storeVoices;
 const availableVoices = parseVoices();
@@ -26,7 +27,9 @@ function storeCardSet(cardSet, index) {
  */
 function parseCardSetArray(key) {
     const flashcardSetsObj = JSON.parse(localStorage.getItem(key)) ?? [];
-    return flashcardSetsObj.map((cardSet) => new CardSet(cardSet.title, cardSet.cards, cardSet.voice));
+    return flashcardSetsObj.map(
+        (cardSet) => new CardSet(cardSet.title, cardSet.cards, cardSet.voice)
+    );
 }
 
 /**
@@ -85,11 +88,33 @@ function cloneCardTemplate() {
     return clone;
 }
 
+/**
+ * Read aloud text of specified element's sibling with given voice.
+ * @param {Element} button Element with a text element sibling to be read.
+ * @param {String} voiceName Name of voice that will read the text.
+ */
+function speakSiblingText(button, voiceName) {
+    const selectedVoice = speechSynth.getVoices().find(
+        (voice) => voice.name == voiceName
+    )
+
+    const textElement = button.parentNode.getElementsByClassName("text")[0];
+    const utterance = new SpeechSynthesisUtterance(textElement.innerText);
+    if (selectedVoice) {
+        utterance.voice = selectedVoice;
+        utterance.lang = selectedVoice.lang;
+    }
+    speechSynth.cancel();
+    speechSynth.speak(utterance);
+}
+
 export { 
     flashcardSets, 
     trash,  
+    speechSynth,
     availableVoices, 
     cloneCardSetTemplate, 
     cloneCardTemplate, 
-    storeCardSet 
+    storeCardSet,
+    speakSiblingText
 };

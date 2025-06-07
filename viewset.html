@@ -58,15 +58,21 @@
         <fieldset name="card" class="card">
             <div class="card-data">
                 <fieldset name="front" class="card-side">
-                    <p name="text" contenteditable="true"></p>
+                    <input type="button" name="speak-text" class="speak-text" value="🔊">
+
+                    <p name="text" class="text" contenteditable="true"></p>
                     <input type="file" name="image" accept="image/*,.pdf" hidden>
                     <input type="file" name="audio" accept="audio/*" hidden>
+
                 </fieldset>
                 
                 <fieldset name="back" class="card-side">
-                    <p name="text" contenteditable="true"></p>
+                    <input type="button" name="speak-text" class="speak-text" value="🔊">
+                    
+                    <p name="text" class="text" contenteditable="true"></p>
                     <input type="file" name="image" accept="image/*,.pdf" hidden>
                     <input type="file" name="audio" accept="audio/*" hidden>
+
                 </fieldset>
             </div>
             

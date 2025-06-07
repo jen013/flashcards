@@ -1,4 +1,11 @@
-import { flashcardSets, availableVoices, cloneCardTemplate, trash, storeCardSet } from "./main.js";
+import { 
+    flashcardSets, 
+    availableVoices, 
+    cloneCardTemplate, 
+    trash, 
+    storeCardSet, 
+    speakSiblingText 
+} from "./main.js";
 import { CardSet } from "./cardset.js";
 
 const searchParams = new URLSearchParams(window.location.search);
@@ -75,6 +82,9 @@ function fillDocument() {
     }
 }
 
+/**
+ * Populates select element with available voices.
+*/
 function fillVoices() {
     const voiceSelect = document.getElementById("voice-select");
     let voiceOption;
@@ -133,7 +143,7 @@ function setReadOnly() {
 
 /**
  * Call specific function on all given form elements.
- * @param {HTMLElement|NodeList} element Results from accessing form element[s].
+ * @param {Element|NodeList} element Results from accessing form element[s].
  * @param {function} action Function to execute on the form element[s].
  */
 function setAllFormElements(element, action) {
@@ -162,7 +172,9 @@ function addCardInput(clickedButton = document.getElementsByName("add-card-butto
     const cardSet = document.getElementsByClassName("card-set")[0];
     const clonedButton = document.getElementsByName("add-card-button")[0].cloneNode(true);
     let clonedCard = cloneCardTemplate();
-    const deleteButton = clonedCard.querySelector("[name='delete-card-button'");
+    const deleteButton = clonedCard.querySelector("[name='delete-card-button']");
+    const speakButtons = clonedCard.querySelectorAll("[name='speak-text']");
+    const voiceSelect = document.getElementById("voice-select");
     
     cardSet.insertBefore(clonedButton, clickedButton.nextElementSibling);
     cardSet.insertBefore(clonedCard, clickedButton.nextElementSibling);
@@ -175,6 +187,10 @@ function addCardInput(clickedButton = document.getElementsByName("add-card-butto
         clonedButton.remove();
         clonedCard.remove();
     });
+
+    speakButtons.forEach((button) => button.addEventListener("click", () => {
+        speakSiblingText(button, voiceSelect.value)
+    }));
 }
 
 /**
