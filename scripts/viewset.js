@@ -1,4 +1,4 @@
-import { flashcardSets, cloneCardTemplate, trash } from "./main.js";
+import { flashcardSets, cloneCardTemplate, trash, storeCardSet } from "./main.js";
 import { CardSet } from "./cardset.js";
 
 const searchParams = new URLSearchParams(window.location.search);
@@ -208,7 +208,7 @@ function addNavigationFunctionality() {
     });
     cardSetForm.addEventListener("submit", (event) => {
         event.preventDefault();
-        storeSet(formToCardSet(), cardSetIdx);
+        storeCardSet(formToCardSet(), cardSetIdx);
         window.location.search = "?index=" + cardSetIdx;
     });
 }
@@ -265,17 +265,6 @@ function formToCardSet() {
     }
 
     return new CardSet(titleInput.value, cardsArray);
-}
-
-/**
- * Updates flashcard sets of localStorage, i.e., replaces element at specified index 
- * with the card set passed. If index is null, then card set is inserted at the end.
- * @param {CardSet} cardSet Card set to be stored in localStorage.
- * @param {Number} index Index that the card set will be stored in.
- */
-function storeSet(cardSet, index) {
-    flashcardSets[index] = cardSet;
-    localStorage.setItem("flashcardSets", JSON.stringify(flashcardSets));
 }
 
 /**
