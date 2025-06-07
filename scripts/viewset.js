@@ -13,6 +13,8 @@ init();
  */
 function init() {
     const pageTitleElement = document.getElementsByTagName("title")[0];
+    // filledVoices has to come before fillDocument to properly set selected voice.
+    fillVoices();
     
     // fillDocument has to come before setEditable/setReadOnly to properly set page title.
     if (cardSetIdx >= 0 && cardSetIdx < flashcardSets.length) {
@@ -43,6 +45,7 @@ function init() {
 function fillDocument() {
     const pageTitleElement = document.getElementsByTagName("title")[0];
     const titleInput = document.getElementsByClassName("title")[0];
+    const voiceSelect = document.getElementById("voice-select");
     const cardInputs = document.getElementsByName("card");
     const cardsArray = cardSetData.cards;
     let card;
@@ -50,6 +53,13 @@ function fillDocument() {
     pageTitleElement.textContent = cardSetData.title;
     titleInput.value = cardSetData.title;
     titleInput.setAttribute("title", titleInput.value);
+
+    for (const option of voiceSelect.options) {
+        if (option.value == cardSetData.voice) {
+            option.selected = true;
+            break
+        }
+    }
     
     // Add all necessary card inputs.
     cardsArray.forEach(() => addCardInput());
@@ -62,6 +72,18 @@ function fillDocument() {
             cardInputs[i].elements[side].elements["image"].value = card[side]["image"];
             cardInputs[i].elements[side].elements["image"].value = card[side]["audio"];
         });
+    }
+}
+
+function fillVoices() {
+    const voiceSelect = document.getElementById("voice-select");
+    let voiceOption;
+
+    for (const voice of availableVoices) {
+        voiceOption = document.createElement("option");
+        voiceOption.textContent += voice.label;
+        voiceOption.value = voice.name;
+        voiceSelect.appendChild(voiceOption);
     }
 }
 
@@ -90,6 +112,7 @@ function setEditable(create=false) {
 
     cardSetForm["cancel-button"].removeAttribute("hidden");
     cardSetForm["save-button"].removeAttribute("hidden");
+    cardSetForm["settings"].removeAttribute("hidden");
 }
 
 /**
@@ -226,6 +249,7 @@ function addDeletePopupFunctionality() {
 function formToCardSet() {
     const cardInputs = document.getElementsByName("card");
     const titleInput = document.getElementsByClassName("title")[0];
+    const voiceSelect = document.getElementById("voice-select");
     const cardsArray = Array(cardInputs.length);
     let card;
 
@@ -241,7 +265,7 @@ function formToCardSet() {
         cardsArray[i] = card;
     }
 
-    return new CardSet(titleInput.value, cardsArray);
+    return new CardSet(titleInput.value, cardsArray, voiceSelect.value);
 }
 
 /**

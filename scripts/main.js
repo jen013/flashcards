@@ -26,7 +26,7 @@ function storeCardSet(cardSet, index) {
  */
 function parseCardSetArray(key) {
     const flashcardSetsObj = JSON.parse(localStorage.getItem(key)) ?? [];
-    return flashcardSetsObj.map((cardSet) => new CardSet(cardSet.title, cardSet.cards));
+    return flashcardSetsObj.map((cardSet) => new CardSet(cardSet.title, cardSet.cards, cardSet.voice));
 }
 
 /**
@@ -37,6 +37,7 @@ function storeVoices() {
     const voices = speechSynth.getVoices();
     const mappedVoices = voices.map((voice) => ({
         label: `[${voice.lang}] ${voice.name}${voice.default ? " [Default]" : ""}`, 
+        name: voice.name,
         lang: voice.lang,
         default: voice.default
     }));
