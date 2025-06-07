@@ -13,7 +13,7 @@
 
 <body>
     <header>
-        <h1><a href="./">Flashcards</a></h1>
+        <h1><a href="./" title="Home">Flashcards</a></h1>
     </header>
 
     <main>
@@ -30,20 +30,20 @@
         <form id="card-set-form">
             <input type="text" name="title" class="title" readonly>
             
-            <div class="card-set-interactions">
-                <input type="button" class="edit-button" value="✎" title="Edit">
-                <input type="button" class="play-button" value="▶" title="Play">
-                <input type="button" class="delete-button" value="🗑" title="Delete">
-            </div>
+            <fieldset name="card-set-interactions" class="card-set-interactions">
+                <input type="button" name="edit-button" class="edit-button" value="✎" title="Edit">
+                <input type="button" name="play-button" class="play-button" value="▶" title="Play">
+                <input type="button" name="delete-button" class="delete-button" value="🗑" title="Delete">
+            </fieldset>
             
-            <fieldset class="card-set">
+            <fieldset name="card-set" class="card-set">
                 <input type="button" name="add-card-button" value="+" title="Insert Card" hidden>
             </fieldset>
             
-            <div class="card-set-confirmation">
-                <input type="button" class="cancel-button" value="Cancel" hidden>
-                <input type="submit" class="save-button" value="Save" hidden>
-            </div>
+            <fieldset name="card-set-confirmation" class="card-set-confirmation">
+                <input type="button" name="cancel-button" class="cancel-button" value="Cancel" hidden>
+                <input type="submit" name="save-button" class="save-button" value="Save" hidden>
+            </fieldset>
         </form>
     </main>
     
@@ -51,13 +51,13 @@
         <fieldset name="card" class="card">
             <div class="card-data">
                 <fieldset name="front" class="card-side">
-                    <p type="text" name="text" contenteditable="true"></p>
+                    <p name="text" contenteditable="true"></p>
                     <input type="file" name="image" accept="image/*,.pdf" hidden>
                     <input type="file" name="audio" accept="audio/*" hidden>
                 </fieldset>
                 
                 <fieldset name="back" class="card-side">
-                    <p type="text" name="text" contenteditable="true"></p>
+                    <p name="text" contenteditable="true"></p>
                     <input type="file" name="image" accept="image/*,.pdf" hidden>
                     <input type="file" name="audio" accept="audio/*" hidden>
                 </fieldset>
