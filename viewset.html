@@ -36,6 +36,13 @@
                 <input type="button" name="delete-button" class="delete-button" value="🗑" title="Delete">
             </fieldset>
             
+            <fieldset name="settings" class="settings" hidden>
+                <div class="voices-setting">
+                    <label for="voice-select">Voice:</label>
+                    <select id="voice-select"></select>
+                </div>
+            </fieldset>
+            
             <fieldset name="card-set" class="card-set">
                 <input type="button" name="add-card-button" value="+" title="Insert Card" hidden>
             </fieldset>
@@ -51,15 +58,21 @@
         <fieldset name="card" class="card">
             <div class="card-data">
                 <fieldset name="front" class="card-side">
-                    <p name="text" contenteditable="true"></p>
+                    <input type="button" name="speak-text" class="speak-text" value="🔊">
+
+                    <p name="text" class="text" contenteditable="true"></p>
                     <input type="file" name="image" accept="image/*,.pdf" hidden>
                     <input type="file" name="audio" accept="audio/*" hidden>
+
                 </fieldset>
                 
                 <fieldset name="back" class="card-side">
-                    <p name="text" contenteditable="true"></p>
+                    <input type="button" name="speak-text" class="speak-text" value="🔊">
+                    
+                    <p name="text" class="text" contenteditable="true"></p>
                     <input type="file" name="image" accept="image/*,.pdf" hidden>
                     <input type="file" name="audio" accept="audio/*" hidden>
+
                 </fieldset>
             </div>
             

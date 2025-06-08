@@ -1,4 +1,4 @@
-import { flashcardSets } from "./main.js";
+import { flashcardSets, speakSiblingText } from "./main.js";
 
 const searchParams = new URLSearchParams(window.location.search);
 const cardSetIdx = searchParams.get("index");
@@ -195,6 +195,7 @@ function addCardDisplayEvents()  {
     const cardViewToggle = cardDisplayForm["card-view-toggle"];
     const revealButtons = cardDisplayForm["reveal-card"];
     const resetDisplayButton = cardDisplayForm["reset-card-display"];
+    const speakButtons = cardDisplayForm["speak-text"];
     
     // Swaps which card side is being displayed.
     flipButton.addEventListener("click", () => {
@@ -225,6 +226,10 @@ function addCardDisplayEvents()  {
 
     // Rehides appropriate card side.
     resetDisplayButton.addEventListener("click", () => updateCardDisplay());
+
+    speakButtons.forEach((button) => button.addEventListener("click", () => {
+        speakSiblingText(button, cardSetData.voice);
+    }));
 }
 
 /**

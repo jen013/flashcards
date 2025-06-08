@@ -1,7 +1,8 @@
 export class CardSet {
-    constructor(title = "", cards = []) {
+    constructor(title = "", cards = [], voice = undefined) {
         this.title = title;
         this.cards = cards.map((card) => new Card(card));
+        this.voice = voice;
     }
 }
 
