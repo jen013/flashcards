@@ -252,7 +252,11 @@ function addDeletePopupFunctionality() {
     const deletePopupForm = document.getElementById("delete-popup-form");
     const deleteCancelButton = document.getElementsByClassName("delete-cancel")[0];
 
-    deletePopupForm.addEventListener("submit", () => deleteCardSet());
+    deletePopupForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        deleteCardSet();
+        window.location.href = "./";
+    });
     deletePopupForm.addEventListener("mousedown", (event) => event.stopPropagation());
     deleteCancelButton.addEventListener("click", () => deletePopupDialog.close());
     deletePopupDialog.addEventListener("mousedown", () => deletePopupDialog.close());
