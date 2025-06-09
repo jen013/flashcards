@@ -1,4 +1,11 @@
-import { flashcardSets, cloneCardTemplate, trash } from "./main.js";
+import { 
+    flashcardSets, 
+    availableVoices, 
+    cloneCardTemplate, 
+    trash, 
+    storeCardSet, 
+    speakSiblingText 
+} from "./main.js";
 import { CardSet } from "./cardset.js";
 
 const searchParams = new URLSearchParams(window.location.search);
@@ -13,6 +20,8 @@ init();
  */
 function init() {
     const pageTitleElement = document.getElementsByTagName("title")[0];
+    // filledVoices has to come before fillDocument to properly set selected voice.
+    fillVoices();
     
     // fillDocument has to come before setEditable/setReadOnly to properly set page title.
     if (cardSetIdx >= 0 && cardSetIdx < flashcardSets.length) {
@@ -43,6 +52,7 @@ function init() {
 function fillDocument() {
     const pageTitleElement = document.getElementsByTagName("title")[0];
     const titleInput = document.getElementsByClassName("title")[0];
+    const voiceSelect = document.getElementById("voice-select");
     const cardInputs = document.getElementsByName("card");
     const cardsArray = cardSetData.cards;
     let card;
@@ -50,6 +60,13 @@ function fillDocument() {
     pageTitleElement.textContent = cardSetData.title;
     titleInput.value = cardSetData.title;
     titleInput.setAttribute("title", titleInput.value);
+
+    for (const option of voiceSelect.options) {
+        if (option.value == cardSetData.voice) {
+            option.selected = true;
+            break
+        }
+    }
     
     // Add all necessary card inputs.
     cardsArray.forEach(() => addCardInput());
@@ -62,6 +79,21 @@ function fillDocument() {
             cardInputs[i].elements[side].elements["image"].value = card[side]["image"];
             cardInputs[i].elements[side].elements["image"].value = card[side]["audio"];
         });
+    }
+}
+
+/**
+ * Populates select element with available voices.
+*/
+function fillVoices() {
+    const voiceSelect = document.getElementById("voice-select");
+    let voiceOption;
+
+    for (const voice of availableVoices) {
+        voiceOption = document.createElement("option");
+        voiceOption.textContent += voice.label;
+        voiceOption.value = voice.name;
+        voiceSelect.appendChild(voiceOption);
     }
 }
 
@@ -90,6 +122,7 @@ function setEditable(create=false) {
 
     cardSetForm["cancel-button"].removeAttribute("hidden");
     cardSetForm["save-button"].removeAttribute("hidden");
+    cardSetForm["settings"].removeAttribute("hidden");
 }
 
 /**
@@ -110,7 +143,7 @@ function setReadOnly() {
 
 /**
  * Call specific function on all given form elements.
- * @param {HTMLElement|NodeList} element Results from accessing form element[s].
+ * @param {Element|NodeList} element Results from accessing form element[s].
  * @param {function} action Function to execute on the form element[s].
  */
 function setAllFormElements(element, action) {
@@ -139,7 +172,9 @@ function addCardInput(clickedButton = document.getElementsByName("add-card-butto
     const cardSet = document.getElementsByClassName("card-set")[0];
     const clonedButton = document.getElementsByName("add-card-button")[0].cloneNode(true);
     let clonedCard = cloneCardTemplate();
-    const deleteButton = clonedCard.querySelector("[name='delete-card-button'");
+    const deleteButton = clonedCard.querySelector("[name='delete-card-button']");
+    const speakButtons = clonedCard.querySelectorAll("[name='speak-text']");
+    const voiceSelect = document.getElementById("voice-select");
     
     cardSet.insertBefore(clonedButton, clickedButton.nextElementSibling);
     cardSet.insertBefore(clonedCard, clickedButton.nextElementSibling);
@@ -152,6 +187,10 @@ function addCardInput(clickedButton = document.getElementsByName("add-card-butto
         clonedButton.remove();
         clonedCard.remove();
     });
+
+    speakButtons.forEach((button) => button.addEventListener("click", () => {
+        speakSiblingText(button, voiceSelect.value)
+    }));
 }
 
 /**
@@ -185,7 +224,7 @@ function addNavigationFunctionality() {
     });
     cardSetForm.addEventListener("submit", (event) => {
         event.preventDefault();
-        storeSet(formToCardSet(), cardSetIdx);
+        storeCardSet(formToCardSet(), cardSetIdx);
         window.location.search = "?index=" + cardSetIdx;
     });
 }
@@ -226,6 +265,7 @@ function addDeletePopupFunctionality() {
 function formToCardSet() {
     const cardInputs = document.getElementsByName("card");
     const titleInput = document.getElementsByClassName("title")[0];
+    const voiceSelect = document.getElementById("voice-select");
     const cardsArray = Array(cardInputs.length);
     let card;
 
@@ -241,18 +281,7 @@ function formToCardSet() {
         cardsArray[i] = card;
     }
 
-    return new CardSet(titleInput.value, cardsArray);
-}
-
-/**
- * Updates flashcard sets of localStorage, i.e., replaces element at specified index 
- * with the card set passed. If index is null, then card set is inserted at the end.
- * @param {CardSet} cardSet Card set to be stored in localStorage.
- * @param {Number} index Index that the card set will be stored in.
- */
-function storeSet(cardSet, index) {
-    flashcardSets[index] = cardSet;
-    localStorage.setItem("flashcardSets", JSON.stringify(flashcardSets));
+    return new CardSet(titleInput.value, cardsArray, voiceSelect.value);
 }
 
 /**

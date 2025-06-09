@@ -59,6 +59,16 @@
     margin: 0 0.25rem;
 }
 
+.voices-setting {
+    display: flex;
+    padding: 0.25rem 0.75rem;
+    column-gap: 0.5rem;
+}
+
+#voice-select {
+    width: 100%
+}
+
 .card-set-confirmation {
     text-align: end;
 }
@@ -96,9 +106,12 @@ input[name=add-card-button] {
 }
 
 .card-side {
+    position: relative;
     display: flex;
+    
     justify-content: center;
     align-items: center;
+
     height: 10rem;
 }
 
@@ -109,9 +122,16 @@ p[name=text] {
     padding: 1rem;
 }
 
+.speak-text {
+    position: absolute;
+    padding: 0.75rem;
+    top: 0;
+    right: 0;
+}
+
 /* ======================= OVERFLOW ======================= */
 
-.title {
+.title, select {
     text-overflow: ellipsis;
 }
 
@@ -160,6 +180,12 @@ p[name=text] {
     line-height: 100%;
 
     border: 2px solid transparent;
+    border-radius: 2rem;
+}
+
+.voices-setting {
+    background-color: var(--hex-element);
+    border: 1px solid var(--hex-border-normal);
     border-radius: 2rem;
 }
 
@@ -289,6 +315,10 @@ input[type=button]:disabled, input[type=submit]:disabled {
 
 .save-button:active {
     background-color: rgba(var(--rgb-accent-1), 0.125);
+}
+
+.voices-setting:focus-within {
+    border-color: rgba(var(--rgb-accent-2));
 }
 
 input[name=add-card-button]:hover {

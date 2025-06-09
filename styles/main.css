@@ -77,6 +77,14 @@ input:is([type=button], [type=submit], [type=checkbox], [type=radio]):disabled +
     color: var(--hex-text-sub);
 }
 
+select {
+    color: var(--hex-text-sub);
+}
+
+option {
+    background-color: var(--hex-element-borderless);
+}
+
 dialog::backdrop {
     background-color: #00000040;
 }
