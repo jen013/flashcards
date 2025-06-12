@@ -259,7 +259,7 @@ input[name=delete-card-button] {
 }
 
 .delete-cancel:hover {
-    background-color: rgb(var(--rgb-accent-1));
+    background-color: var(--hex-border-bright);
 }
 
 .delete-confirm:hover {
@@ -280,11 +280,11 @@ input[type=button]:disabled, input[type=submit]:disabled {
     border-color: var(--hex-border-normal);
 }
 
-.card-set-interactions input[type=button]:hover {
+.card-set-interactions input[type=button]:hover:not(:disabled) {
     background-color: var(--hex-element);
 }
 
-.card-set-interactions input[type=button]:active {
+.card-set-interactions input[type=button]:active:not(:disabled) {
     background-color: var(--hex-background-dark);
 }
 
