@@ -4,7 +4,6 @@ const flashcardSets = parseCardSetArray("flashcardSets");
 const trash = parseCardSetArray("trash");
 
 const speechSynth = window.speechSynthesis;
-speechSynth.cancel();
 storeVoices();
 speechSynth.onvoiceschanged = storeVoices;
 const availableVoices = parseVoices();
@@ -96,7 +95,7 @@ function cloneCardTemplate() {
 function speakSiblingText(button, voiceName) {
     const selectedVoice = speechSynth.getVoices().find(
         (voice) => voice.name == voiceName
-    )
+    );
 
     const textElement = button.parentNode.getElementsByClassName("text")[0];
     const utterance = new SpeechSynthesisUtterance(textElement.innerText);

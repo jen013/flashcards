@@ -179,8 +179,7 @@ function setAllFormElements(element, action) {
 }
 
 /**
- * Makes interactive elements of document functional by adding event handlers and 
- * dynamic inputs.
+ * Initalizes click event for first add card button.
  */
 function addEditFunctionality() {
     const newCardButton = document.getElementsByName("add-card-button")[0];
@@ -221,6 +220,11 @@ function addCardInput(clickedButton = document.getElementsByName("add-card-butto
  */
 function addNavigationFunctionality() {
     const cardSetForm = document.getElementById("card-set-form");
+    const titleInput = cardSetForm["title"];
+    const playButton = cardSetForm["play-button"];
+    const cancelButton = cardSetForm["cancel-button"];
+    const editButton = cardSetForm["edit-button"];
+    const deleteButton = cardSetForm["delete-button"];
     const exportTextButton = cardSetForm["export-text-button"];
     const deletePopupDialog = document.getElementById("delete-popup-dialog");
     const copyIndicator = cardSetForm.getElementsByClassName("indicator")[0];
@@ -272,12 +276,12 @@ function updateEditableURL(edit) {
 }
 
 /**
- * Makes delete popup functional. Clicking moves card set from flashcard sets to trash.
+ * Makes delete popup functional. Submitting moves card set from flashcard sets to trash.
  */
 function addDeletePopupFunctionality() {
     const deletePopupDialog = document.getElementById("delete-popup-dialog");
     const deletePopupForm = document.getElementById("delete-popup-form");
-    const deleteCancelButton = document.getElementsByClassName("delete-cancel")[0];
+    const deleteCancelButton = deletePopupForm["delete-cancel"];
 
     deletePopupForm.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -306,7 +310,7 @@ function formToCardSet() {
         Object.keys(card).forEach((side) => {
             card[side]["text"] = cardInputs[i].elements[side].children["text"].innerText;
             card[side]["image"] = cardInputs[i].elements[side].elements["image"].value;
-            card[side]["audio"] = cardInputs[i].elements[side].elements["image"].value;
+            card[side]["audio"] = cardInputs[i].elements[side].elements["audio"].value;
         });
 
         cardsArray[i] = card;

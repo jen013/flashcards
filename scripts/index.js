@@ -15,8 +15,8 @@ function init() {
     const createButton = document.getElementById("new-set-button");
     createButton.addEventListener("click", () => {
         window.location.href = "./viewset.html?create=true"
-    })
-    
+    });
+
     const importTextButton = document.getElementById("import-text-button");
     const importPopupDialog = document.getElementById("import-popup-dialog");
     importTextButton.addEventListener("click", () => importPopupDialog.showModal());
