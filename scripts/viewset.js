@@ -4,13 +4,16 @@ import {
     cloneCardTemplate, 
     trash, 
     storeCardSet, 
-    speakSiblingText 
+    speakSiblingText,
+    popFadeAnimation,
+    indicateError
 } from "./main.js";
 import { CardSet } from "./cardset.js";
 
 const searchParams = new URLSearchParams(window.location.search);
 const cardSetIdx = searchParams.get("index") ?? flashcardSets.length;
 const cardSetData = flashcardSets[cardSetIdx];
+let errorTimeout;
 
 init();
 
@@ -19,17 +22,13 @@ init();
  * Navigates to home page if no card set is found.
  */
 function init() {
-    const pageTitleElement = document.getElementsByTagName("title")[0];
+    addNavigationFunctionality();
+    addEditFunctionality();
+    addDeletePopupFunctionality();
     // filledVoices has to come before fillDocument to properly set selected voice.
     fillVoices();
     
-    // fillDocument has to come before setEditable/setReadOnly to properly set page title.
-    if (cardSetIdx >= 0 && cardSetIdx < flashcardSets.length) {
-        fillDocument();
-    } else if (window.location.search != "?create=true") {
-        window.location.search = "?create=true";
-    }
-
+    const pageTitleElement = document.getElementsByTagName("title")[0];
     if (searchParams.get("create") === "true") {
         pageTitleElement.textContent = "Create Flashcard Set";
         setEditable(true);
@@ -38,12 +37,17 @@ function init() {
         setEditable();
     } else {
         pageTitleElement.textContent += " - View";
-        setReadOnly();
     }
-
-    addEditFunctionality();
-    addNavigationFunctionality();
-    addDeletePopupFunctionality();
+    
+    // fillDocument has to come before setCardEditables to properly make card elements 
+    // functional.
+    if (cardSetIdx >= 0 && cardSetIdx < flashcardSets.length) {
+        fillDocument();
+    } else if (window.location.search != "?create=true") {
+        window.location.search = "?create=true";
+    }
+    
+    setCardEditables(searchParams.get("edit") === "true");
 }
 
 /**
@@ -54,6 +58,7 @@ function fillDocument() {
     const titleInput = document.getElementsByClassName("title")[0];
     const voiceSelect = document.getElementById("voice-select");
     const cardInputs = document.getElementsByName("card");
+    const errorMessage = document.getElementById("loading-error-message");
     const cardsArray = cardSetData.cards;
     let card;
     
@@ -75,11 +80,25 @@ function fillDocument() {
         card = cardsArray[i];
 
         Object.keys(card).forEach((side) => {
-            cardInputs[i].elements[side].children["text"].innerText = card[side]["text"];
-            cardInputs[i].elements[side].elements["image"].value = card[side]["image"];
-            cardInputs[i].elements[side].elements["image"].value = card[side]["audio"];
+            indicateError(
+                errorMessage,
+                () => fillCard(cardInputs[i].elements[side], card[side]),
+                errorTimeout, 
+                5000
+            );
         });
     }
+}
+
+/**
+ * Populate card side input with appropriate data.
+ * @param {Element} input Card input to populate.
+ * @param {CardSide} side Data to fill inputs with.
+ */
+function fillCard(input, cardSide) {
+    input.children["text"].innerText = cardSide["text"];
+    input.elements["image"].value = cardSide["image"];
+    input.elements["audio"].value = cardSide["audio"];
 }
 
 /**
@@ -114,11 +133,8 @@ function setEditable(create=false) {
     } else {
         cardSetForm["edit-button"].disabled = true;
         cardSetForm["play-button"].disabled = true;
+        cardSetForm["export-text-button"].disabled = true;
     }
-
-    setAllFormElements(cardSetForm["add-card-button"], 
-        (button) => button.removeAttribute("hidden")
-    );
 
     cardSetForm["cancel-button"].removeAttribute("hidden");
     cardSetForm["save-button"].removeAttribute("hidden");
@@ -126,19 +142,26 @@ function setEditable(create=false) {
 }
 
 /**
- * Makes interactive elements of document functional by adding event handlers and 
- * dynamic inputs.
+ * 
+ * @param {Boolean} edit Whether the set is being edited or is read only, i.e., 
+ *      true if the set will be edited, and false if the set is read only.
  */
-function setReadOnly() {
+function setCardEditables(edit) {
     const cardSetForm = document.getElementById("card-set-form");
 
-    setAllFormElements(cardSetForm["delete-card-button"], 
-        (button) => button.hidden = true
-    );
-    
-    const readCardContentOnly = (side) => side.children["text"].contentEditable = "false";
-    setAllFormElements(cardSetForm["front"], readCardContentOnly);
-    setAllFormElements(cardSetForm["back"], readCardContentOnly);
+    if (edit) {
+        setAllFormElements(cardSetForm["add-card-button"], 
+            (button) => button.removeAttribute("hidden")
+        );
+    } else {
+        const readCardContentOnly = (side) => side.children["text"].contentEditable = "false";
+        setAllFormElements(cardSetForm["front"], readCardContentOnly);
+        setAllFormElements(cardSetForm["back"], readCardContentOnly);
+
+        setAllFormElements(cardSetForm["delete-card-button"], 
+            (button) => button.hidden = true
+        );
+    }
 }
 
 /**
@@ -156,8 +179,7 @@ function setAllFormElements(element, action) {
 }
 
 /**
- * Makes interactive elements of document functional by adding event handlers and 
- * dynamic inputs.
+ * Initalizes click event for first add card button.
  */
 function addEditFunctionality() {
     const newCardButton = document.getElementsByName("add-card-button")[0];
@@ -198,12 +220,15 @@ function addCardInput(clickedButton = document.getElementsByName("add-card-butto
  */
 function addNavigationFunctionality() {
     const cardSetForm = document.getElementById("card-set-form");
-    const titleInput = document.getElementsByClassName("title")[0];
-    const playButton = document.getElementsByClassName("play-button")[0];
-    const cancelButton = document.getElementsByClassName("cancel-button")[0];
-    const editButton = document.getElementsByClassName("edit-button")[0];
-    const deleteButton = document.getElementsByClassName("delete-button")[0];
+    const titleInput = cardSetForm["title"];
+    const playButton = cardSetForm["play-button"];
+    const cancelButton = cardSetForm["cancel-button"];
+    const editButton = cardSetForm["edit-button"];
+    const deleteButton = cardSetForm["delete-button"];
+    const exportTextButton = cardSetForm["export-text-button"];
     const deletePopupDialog = document.getElementById("delete-popup-dialog");
+    const copyIndicator = cardSetForm.getElementsByClassName("indicator")[0];
+    let copyTimeout;
 
     titleInput.addEventListener("input", () => {
         titleInput.setAttribute("title", titleInput.value);
@@ -214,6 +239,12 @@ function addNavigationFunctionality() {
     });
     editButton.addEventListener("click", () => updateEditableURL(true));
     deleteButton.addEventListener("click", () => deletePopupDialog.showModal());
+    exportTextButton.addEventListener("click", () => {
+        const cardSetText = JSON.stringify(formToCardSet());
+        navigator.clipboard.writeText(cardSetText);
+        console.log("Copied Text:\n" + cardSetText);
+        popFadeAnimation(copyIndicator, copyTimeout, 2000);
+    });
 
     cancelButton.addEventListener("click", () => {
         if (searchParams.get("create") === "true") {
@@ -245,12 +276,12 @@ function updateEditableURL(edit) {
 }
 
 /**
- * Makes delete popup functional. Clicking moves card set from flashcard sets to trash.
+ * Makes delete popup functional. Submitting moves card set from flashcard sets to trash.
  */
 function addDeletePopupFunctionality() {
     const deletePopupDialog = document.getElementById("delete-popup-dialog");
     const deletePopupForm = document.getElementById("delete-popup-form");
-    const deleteCancelButton = document.getElementsByClassName("delete-cancel")[0];
+    const deleteCancelButton = deletePopupForm["delete-cancel"];
 
     deletePopupForm.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -279,7 +310,7 @@ function formToCardSet() {
         Object.keys(card).forEach((side) => {
             card[side]["text"] = cardInputs[i].elements[side].children["text"].innerText;
             card[side]["image"] = cardInputs[i].elements[side].elements["image"].value;
-            card[side]["audio"] = cardInputs[i].elements[side].elements["image"].value;
+            card[side]["audio"] = cardInputs[i].elements[side].elements["audio"].value;
         });
 
         cardsArray[i] = card;

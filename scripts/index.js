@@ -1,4 +1,5 @@
-import { flashcardSets, cloneCardSetTemplate } from "./main.js";
+import { flashcardSets, cloneCardSetTemplate, storeCardSet } from "./main.js";
+import { CardSet } from "./cardset.js";
 
 init();
 
@@ -14,9 +15,55 @@ function init() {
     const createButton = document.getElementById("new-set-button");
     createButton.addEventListener("click", () => {
         window.location.href = "./viewset.html?create=true"
-    })
+    });
+
+    const importTextButton = document.getElementById("import-text-button");
+    const importPopupDialog = document.getElementById("import-popup-dialog");
+    importTextButton.addEventListener("click", () => importPopupDialog.showModal());
     
+    addImportPopupFunctionality();
     previewFlashcardSets();
+}
+
+/**
+ * Makes import popup functional. Submitting imports converts and saves string to 
+ * flashcard sets.
+ */
+function addImportPopupFunctionality() {
+    const importPopupDialog = document.getElementById("import-popup-dialog");
+    const importPopupForm = document.getElementById("import-popup-form");
+    const importCancelButton = importPopupForm["import-cancel"];
+    const importTextInput = importPopupForm["import-text"];
+    const importFailMsg = document.getElementsByClassName("import-fail-message")[0];
+
+    importCancelButton.addEventListener("click", () => {
+        importFailMsg.hidden = true;
+        importTextInput.value = "";
+        importPopupDialog.close();
+    });
+    importPopupForm.addEventListener("submit", (event) => {
+        if (!(importFromText(importTextInput.value))) {
+            event.preventDefault();
+        };
+    });
+}
+
+/**
+ * Converts text to a card set and appends it to flashcard sets of localStorage.
+ * @param {String} text Input to parse into a CardSet.
+ * @returns Boolean of whether or not the card set was successfully stored.
+ */
+function importFromText(text) {
+    const importFailMsg = document.getElementsByClassName("import-fail-message")[0];
+    try {
+        const parsed = JSON.parse(text);
+        const cardSet = new CardSet(parsed.title, parsed.cards, parsed.voice);
+        storeCardSet(cardSet, flashcardSets.length);
+        return true;
+    } catch {
+        importFailMsg.removeAttribute("hidden");
+        return false;
+    }
 }
 
 /**
