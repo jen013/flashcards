@@ -4,13 +4,16 @@ import {
     cloneCardTemplate, 
     trash, 
     storeCardSet, 
-    speakSiblingText 
+    speakSiblingText,
+    popFadeAnimation,
+    indicateError
 } from "./main.js";
 import { CardSet } from "./cardset.js";
 
 const searchParams = new URLSearchParams(window.location.search);
 const cardSetIdx = searchParams.get("index") ?? flashcardSets.length;
 const cardSetData = flashcardSets[cardSetIdx];
+let errorTimeout;
 
 init();
 
@@ -19,17 +22,13 @@ init();
  * Navigates to home page if no card set is found.
  */
 function init() {
-    const pageTitleElement = document.getElementsByTagName("title")[0];
+    addNavigationFunctionality();
+    addEditFunctionality();
+    addDeletePopupFunctionality();
     // filledVoices has to come before fillDocument to properly set selected voice.
     fillVoices();
     
-    // fillDocument has to come before setEditable/setReadOnly to properly set page title.
-    if (cardSetIdx >= 0 && cardSetIdx < flashcardSets.length) {
-        fillDocument();
-    } else if (window.location.search != "?create=true") {
-        window.location.search = "?create=true";
-    }
-
+    const pageTitleElement = document.getElementsByTagName("title")[0];
     if (searchParams.get("create") === "true") {
         pageTitleElement.textContent = "Create Flashcard Set";
         setEditable(true);
@@ -38,12 +37,17 @@ function init() {
         setEditable();
     } else {
         pageTitleElement.textContent += " - View";
-        setReadOnly();
     }
-
-    addEditFunctionality();
-    addNavigationFunctionality();
-    addDeletePopupFunctionality();
+    
+    // fillDocument has to come before setCardEditables to properly make card elements 
+    // functional.
+    if (cardSetIdx >= 0 && cardSetIdx < flashcardSets.length) {
+        fillDocument();
+    } else if (window.location.search != "?create=true") {
+        window.location.search = "?create=true";
+    }
+    
+    setCardEditables(searchParams.get("edit") === "true");
 }
 
 /**
@@ -54,6 +58,7 @@ function fillDocument() {
     const titleInput = document.getElementsByClassName("title")[0];
     const voiceSelect = document.getElementById("voice-select");
     const cardInputs = document.getElementsByName("card");
+    const errorMessage = document.getElementById("loading-error-message");
     const cardsArray = cardSetData.cards;
     let card;
     
@@ -75,11 +80,25 @@ function fillDocument() {
         card = cardsArray[i];
 
         Object.keys(card).forEach((side) => {
-            cardInputs[i].elements[side].children["text"].innerText = card[side]["text"];
-            cardInputs[i].elements[side].elements["image"].value = card[side]["image"];
-            cardInputs[i].elements[side].elements["image"].value = card[side]["audio"];
+            indicateError(
+                errorMessage,
+                () => fillCard(cardInputs[i].elements[side], card[side]),
+                errorTimeout, 
+                5000
+            );
         });
     }
+}
+
+/**
+ * Populate card side input with appropriate data.
+ * @param {Element} input Card input to populate.
+ * @param {CardSide} side Data to fill inputs with.
+ */
+function fillCard(input, cardSide) {
+    input.children["text"].innerText = cardSide["text"];
+    input.elements["image"].value = cardSide["image"];
+    input.elements["audio"].value = cardSide["audio"];
 }
 
 /**
@@ -116,29 +135,32 @@ function setEditable(create=false) {
         cardSetForm["play-button"].disabled = true;
     }
 
-    setAllFormElements(cardSetForm["add-card-button"], 
-        (button) => button.removeAttribute("hidden")
-    );
-
     cardSetForm["cancel-button"].removeAttribute("hidden");
     cardSetForm["save-button"].removeAttribute("hidden");
     cardSetForm["settings"].removeAttribute("hidden");
 }
 
 /**
- * Makes interactive elements of document functional by adding event handlers and 
- * dynamic inputs.
+ * 
+ * @param {Boolean} edit Whether the set is being edited or is read only, i.e., 
+ *      true if the set will be edited, and false if the set is read only.
  */
-function setReadOnly() {
+function setCardEditables(edit) {
     const cardSetForm = document.getElementById("card-set-form");
 
-    setAllFormElements(cardSetForm["delete-card-button"], 
-        (button) => button.hidden = true
-    );
-    
-    const readCardContentOnly = (side) => side.children["text"].contentEditable = "false";
-    setAllFormElements(cardSetForm["front"], readCardContentOnly);
-    setAllFormElements(cardSetForm["back"], readCardContentOnly);
+    if (edit) {
+        setAllFormElements(cardSetForm["add-card-button"], 
+            (button) => button.removeAttribute("hidden")
+        );
+    } else {
+        const readCardContentOnly = (side) => side.children["text"].contentEditable = "false";
+        setAllFormElements(cardSetForm["front"], readCardContentOnly);
+        setAllFormElements(cardSetForm["back"], readCardContentOnly);
+
+        setAllFormElements(cardSetForm["delete-card-button"], 
+            (button) => button.hidden = true
+        );
+    }
 }
 
 /**

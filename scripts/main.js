@@ -130,16 +130,16 @@ function popFadeAnimation(element, timeout, linger=2000) {
 
 /**
  * Show indicator for a specified time if an error occurs when calling given function.
+ * @param {Element} errorElement Element to display when an error occurs.
  * @param {Function} func Function to call and check for error.
  * @param {*} timeout Variable to store timeout in.
- * @param {*} linger Time to show element in milliseconds before fading out.
+ * @param {Number} linger Time to show element in milliseconds before fading out.
  */
-function indicateError(func, timeout, linger) {
-    const errorMessage = document.getElementById("loading-error-message");
+function indicateError(errorElement, func, timeout, linger) {
     try {
         func();
     } catch (error) {
-        popFadeAnimation(errorMessage, timeout, linger);
+        popFadeAnimation(errorElement, timeout, linger);
         console.error(error)
     }
 }
