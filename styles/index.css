@@ -1,16 +1,67 @@
 /* ============== CONTENT FORMATTING ============== */
 
+#import-popup-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    
+    width: 25%;
+    min-width: 12rem;
+    padding: 1.5rem 2rem;
+}
+
+#import-popup-form p, .import-text {
+    margin: auto;
+}
+
+.import-text {
+    padding: 0.5rem 1rem;
+    width: calc(100% - (1rem * 2)); /* Subtract padding */
+}
+
+.import-fail-message:not([hidden]) {
+    display: block;
+    margin: 0.5rem 0 -0.5rem 0;
+}
+
+.import-popup-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.import-cancel, .import-confirm {
+    padding: 0.25rem 0.75rem;
+    width: 75%;
+    min-width: fit-content;
+}
+
+.import-cancel {
+    justify-self: end;
+}
+
+.import-confirm {
+    justify-self: start;
+}
+
+.create-set-buttons {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    bottom: 2.5rem;
+    right: 2.5rem;
+}
+
 .intro-message {
     position: fixed;
     transform: translate(-50%, calc(-50% - ((5.75rem - 1rem) * 0.5)));
     top: 50%;
     left: 50%;
-}
-
-#new-set-button {
-    position: fixed;
-    bottom: 2.5rem;
-    right: 2.5rem;
 }
 
 main {
@@ -78,22 +129,64 @@ main {
 
 /* ====================== STYLING ====================== */
 
+#import-popup-form {
+    background-color: var(--hex-background);
+    text-align: center;
+
+    border: 2px solid rgb(var(--rgb-accent-2));
+    border-radius: 1rem;
+}
+
+.import-text {
+    background-color: var(--hex-element);
+    color: var(--hex-text-sub);
+    font-size: 1rem;
+    border-radius: 1em;
+    outline: 1px solid var(--hex-border-bright);
+}
+
+.import-fail-message {
+    color: var(--hex-delete);
+    line-height: 1.25;
+    font-weight: 200;
+}
+
+.import-cancel, .import-confirm {
+    background-color: var(--hex-element-borderless);
+    font-size: 0.9rem;
+    font-weight: 800;
+
+    border: 4px solid transparent;
+    border-radius: 2rem;
+}
+
 .intro-message {
     font-size: 1.5rem;
     color: var(--hex-text-sub);
     text-align: center;
 }
 
-#new-set-button {
+.create-set-buttons {
+    border: 4px solid rgb(var(--rgb-accent-1));
+    border-radius: 3em;
     background-color: var(--hex-element);
+}
+
+.create-set-buttons > input {
     font-size: 2.5rem;
     line-height: 100%;
-
-    border: 4px solid rgb(var(--rgb-accent-1));
-    border-radius: 1em;
-
     height: calc(1em + 1rem);
-    width: calc(1em + 1rem);;
+    width: calc(1em + 1rem);
+}
+
+#import-text-button {
+    border-top-left-radius: 3em;
+    border-top-right-radius: 3em;
+}
+
+#new-set-button {
+    border-bottom-left-radius: 3em;
+    border-bottom-right-radius: 3em;
 }
 
 .card-set {
@@ -132,6 +225,34 @@ main {
 
 /* ======================= INTERACTIONS ======================= */
 
+#import-text-button {
+    height: 0;
+    border-bottom: 1px solid transparent;
+    transition: height 0.1s ease;
+}
+
+.create-set-buttons:hover #import-text-button {
+    height: calc(1em + 1rem);
+    border-bottom: 1px solid var(--hex-border-bright);
+    transition: height 0.05s ease, border-bottom 0.1s ease-out;
+}
+
+.create-set-buttons:has(#import-text-button:hover) {
+    border-color: rgb(var(--rgb-accent-2));
+}
+
+.create-set-buttons {
+    transition: border-color 0.25s ease;
+}
+
+#import-text-button:hover {
+    background-color: rgba(var(--rgb-accent-2), 0.25);
+}
+
+#import-text-button:active {
+    background-color: rgba(var(--rgb-accent-2), 0.125);
+}
+
 #new-set-button:hover {
     background-color: rgba(var(--rgb-accent-1), 0.25);
 }
@@ -140,11 +261,31 @@ main {
     background-color: rgba(var(--rgb-accent-1), 0.125);
 }
 
+.import-text:focus {
+    outline-color: rgb(var(--rgb-accent-1));
+}
+
+.import-text:has(+ .import-fail-message:not([hidden])) {
+    outline-color: red;
+}
+
+.import-cancel:hover, .import-confirm:hover {
+    color: var(--hex-background-dark);
+}
+
+.import-cancel:hover {
+    background-color: var(--hex-border-bright);
+}
+
+.import-confirm:hover {
+    background-color: rgb(var(--rgb-accent-2));
+}
+
 .card-set:hover {
     background-color: var(--hex-element-borderless-dark);
 }
 
-.title:active, input[type=button]:active {
+.title:active, .play-button:active, .edit-button:active {
     background-color: var(--hex-element-dark);
 }
 

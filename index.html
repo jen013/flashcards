@@ -14,7 +14,25 @@
 <body>
     <header>
         <h1><a href="./" title="Home">Flashcards</a></h1>
-        <input type="button" id="new-set-button" value="+" title="Create Flashcard Set">
+
+        <dialog id="import-popup-dialog">
+            <form id="import-popup-form">
+                <p>Paste the text version of the flashcard set you want to import.</p>
+                <div>
+                    <input type="text" name="import-text" class="import-text">
+                    <small class="import-fail-message" hidden>Import failed. Please check that the text was pasted properly and copied directly from a flashcard set.</small>
+                </div>
+                <div class="import-popup-buttons">
+                    <input type="button" name="import-cancel" class="import-cancel" value="Cancel">
+                    <input type="submit" name="import-confirm" class="import-confirm" value="Import">
+                </div>
+            </form>
+        </dialog>
+
+        <div class="create-set-buttons">
+            <input type="button" id="import-text-button" value="⎘" title="Import From Text">
+            <input type="button" id="new-set-button" value="+" title="Create Flashcard Set">
+        </div>
     </header>
     
     <main>
