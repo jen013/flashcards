@@ -27,12 +27,14 @@ function init() {
     addDeletePopupFunctionality();
     // filledVoices has to come before fillDocument to properly set selected voice.
     fillVoices();
+    const create = searchParams.get("create") === "true";
+    const edit = searchParams.get("edit") === "true";
     
     const pageTitleElement = document.getElementsByTagName("title")[0];
-    if (searchParams.get("create") === "true") {
+    if (create) {
         pageTitleElement.textContent = "Create Flashcard Set";
         setEditable(true);
-    } else if (searchParams.get("edit") === "true") {
+    } else if (edit) {
         pageTitleElement.textContent += " - Edit";
         setEditable();
     } else {
@@ -47,7 +49,7 @@ function init() {
         window.location.search = "?create=true";
     }
     
-    setCardEditables(searchParams.get("edit") === "true");
+    setCardEditables(create || edit);
 }
 
 /**
