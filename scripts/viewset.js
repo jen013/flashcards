@@ -133,6 +133,7 @@ function setEditable(create=false) {
     } else {
         cardSetForm["edit-button"].disabled = true;
         cardSetForm["play-button"].disabled = true;
+        cardSetForm["export-text-button"].disabled = true;
     }
 
     cardSetForm["cancel-button"].removeAttribute("hidden");
@@ -220,12 +221,10 @@ function addCardInput(clickedButton = document.getElementsByName("add-card-butto
  */
 function addNavigationFunctionality() {
     const cardSetForm = document.getElementById("card-set-form");
-    const titleInput = document.getElementsByClassName("title")[0];
-    const playButton = document.getElementsByClassName("play-button")[0];
-    const cancelButton = document.getElementsByClassName("cancel-button")[0];
-    const editButton = document.getElementsByClassName("edit-button")[0];
-    const deleteButton = document.getElementsByClassName("delete-button")[0];
+    const exportTextButton = cardSetForm["export-text-button"];
     const deletePopupDialog = document.getElementById("delete-popup-dialog");
+    const copyIndicator = cardSetForm.getElementsByClassName("indicator")[0];
+    let copyTimeout;
 
     titleInput.addEventListener("input", () => {
         titleInput.setAttribute("title", titleInput.value);
@@ -236,6 +235,12 @@ function addNavigationFunctionality() {
     });
     editButton.addEventListener("click", () => updateEditableURL(true));
     deleteButton.addEventListener("click", () => deletePopupDialog.showModal());
+    exportTextButton.addEventListener("click", () => {
+        const cardSetText = JSON.stringify(formToCardSet());
+        navigator.clipboard.writeText(cardSetText);
+        console.log("Copied Text:\n" + cardSetText);
+        popFadeAnimation(copyIndicator, copyTimeout, 2000);
+    });
 
     cancelButton.addEventListener("click", () => {
         if (searchParams.get("create") === "true") {
