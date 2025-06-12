@@ -108,6 +108,42 @@ function speakSiblingText(button, voiceName) {
     speechSynth.speak(utterance);
 }
 
+/**
+ * Fade in element, then fade out after some specified time.
+ * Note: Exact fade in and fade out transitions are specified with css under the 
+ * '.fade-in' and '.fade-out' selectors.
+ * @param {Element} element Element to fade in and fade out.
+ * @param {*} timeout Variable to store timeout in.
+ * @param {Numer} linger Time to show element in milliseconds before fading out.
+ */
+function popFadeAnimation(element, timeout, linger=2000) {
+    clearTimeout(timeout);
+
+    element.classList.remove("fade-out");
+    element.classList.add("fade-in");
+    
+    timeout = setTimeout(() => {
+        element.classList.remove("fade-in");
+        element.classList.add("fade-out");
+    }, linger);
+}
+
+/**
+ * Show indicator for a specified time if an error occurs when calling given function.
+ * @param {Function} func Function to call and check for error.
+ * @param {*} timeout Variable to store timeout in.
+ * @param {*} linger Time to show element in milliseconds before fading out.
+ */
+function indicateError(func, timeout, linger) {
+    const errorMessage = document.getElementById("loading-error-message");
+    try {
+        func();
+    } catch (error) {
+        popFadeAnimation(errorMessage, timeout, linger);
+        console.error(error)
+    }
+}
+
 export { 
     flashcardSets, 
     trash,  
@@ -116,5 +152,7 @@ export {
     cloneCardSetTemplate, 
     cloneCardTemplate, 
     storeCardSet,
-    speakSiblingText
+    speakSiblingText,
+    popFadeAnimation,
+    indicateError
 };
